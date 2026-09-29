@@ -1,5 +1,11 @@
 import { Annotation } from '@langchain/langgraph';
-import { ExecuteResult, LlmMessage, PlanResult } from '../../contracts';
+import { ExecuteResult, LlmMessage, PlanAction, PlanResult } from '../../contracts';
+
+export interface ExecuteBatchItem {
+  toolCallId: string;
+  action: PlanAction;
+  executeResult: ExecuteResult;
+}
 
 export const AgentGraphAnnotation = Annotation.Root({
   messages: Annotation<LlmMessage[]>({
@@ -15,6 +21,10 @@ export const AgentGraphAnnotation = Annotation.Root({
     default: () => null,
   }),
   executeResult: Annotation<ExecuteResult | null>({
+    reducer: (_, update) => update,
+    default: () => null,
+  }),
+  executeBatch: Annotation<ExecuteBatchItem[] | null>({
     reducer: (_, update) => update,
     default: () => null,
   }),

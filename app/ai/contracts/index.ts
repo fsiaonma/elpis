@@ -28,11 +28,21 @@ export interface EmbeddingProvider {
   embed(texts: string[]): Promise<number[][]>;
 }
 
-export type StepType = 'plan' | 'skill' | 'tool' | 'observe' | 'final' | 'guardrail';
+export type StepType =
+  | 'plan'
+  | 'skill'
+  | 'tool'
+  | 'observe'
+  | 'final'
+  | 'guardrail'
+  | 'delegation';
 
 export interface Step {
   type: StepType;
   iteration: number;
+  agent?: string;
+  childRunId?: string;
+  steps?: Step[];
   [key: string]: unknown;
 }
 

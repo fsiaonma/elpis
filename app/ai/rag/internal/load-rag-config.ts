@@ -13,12 +13,14 @@ interface RagConfig extends RagOptions {
   };
 }
 
+const MIN_RAG_TOP_K = 5;
+
 const DEFAULT_RAG_OPTIONS: Required<Pick<RagOptions, 'chunk' | 'topK' | 'tool'>> = {
   chunk: {
     size: 800,
     overlap: 100,
   },
-  topK: 5,
+  topK: MIN_RAG_TOP_K,
   tool: {
     name: 'retrieve',
     description: '从私有知识库检索相关片段；回答必须引用返回的 docId/text',
@@ -64,7 +66,12 @@ export function resolveRagOptions(configService: ConfigService): RagOptions {
       size: rag.chunk?.size ?? DEFAULT_RAG_OPTIONS.chunk.size,
       overlap: rag.chunk?.overlap ?? DEFAULT_RAG_OPTIONS.chunk.overlap,
     },
-    topK: rag.topK ?? DEFAULT_RAG_OPTIONS.topK,
+    topK: Math.max(
+      MIN_RAG_TOP_K,
+      typeof rag.topK === 'number' && Number.isFinite(rag.topK)
+        ? Math.floor(rag.topK)
+        : DEFAULT_RAG_OPTIONS.topK,
+    ),
     tool: {
       name: rag.tool?.name ?? DEFAULT_RAG_OPTIONS.tool.name,
       description: rag.tool?.description ?? DEFAULT_RAG_OPTIONS.tool.description,

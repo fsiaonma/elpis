@@ -5,6 +5,7 @@ import { AgentScannerService } from '../../agent/agent-scanner.service';
 import { GuardrailService } from '../../guardrail/guardrail.service';
 import {
   AgentStreamEvent,
+  ExecuteError,
   LlmMessage,
   RunResult,
   Step,
@@ -14,8 +15,17 @@ import { ThreadService } from '../../memory/thread.service';
 import { ExecutorService } from '../../tool/executor.service';
 import { ThreadCheckpoint } from '../../store/store.interface';
 import { TraceService } from '../../trace/trace.service';
+import {
+  delegationContext,
+  runWithDelegationContext,
+  StepEmitter,
+} from '../delegation/delegation.context';
 import { LangChainPlannerService } from '../langchain/langchain-planner.service';
-import { resolveMaxIterations } from '../internal/load-runtime-config';
+import {
+  resolveMaxDelegationDepth,
+  resolveMaxIterations,
+  resolveRecursionLimit,
+} from '../internal/load-runtime-config';
 import { AgentGraphHooks, buildAgentGraph } from './agent.graph';
 import { AgentGraphState } from './agent.state';
 
@@ -27,7 +37,7 @@ interface RunContext {
   userContent: string;
 }
 
-type StepEmitter = (event: AgentStreamEvent) => void;
+const MAX_ITER_OUTPUT = 'Reached maximum iterations without a final answer.';
 
 @Injectable()
 export class LangGraphOrchestratorService {
@@ -62,7 +72,17 @@ export class LangGraphOrchestratorService {
 
     const checkpoint = await this.checkpointService.load(resolvedThreadId);
     const context = this.buildContext(agentName, input, checkpoint);
-    const result = await this.runGraph(runId, context, steps);
+    const result = await runWithDelegationContext(
+      {
+        runId,
+        agentName,
+        agentStack: [agentName],
+        depth: 0,
+        parentSteps: steps,
+        iteration: 0,
+      },
+      () => this.runGraph(runId, context, steps),
+    );
 
     this.traceService.finalize(runId, result.output);
     await this.persistTurn(resolvedThreadId, checkpoint, context.userContent, result.output);
@@ -106,14 +126,133 @@ export class LangGraphOrchestratorService {
     yield { event: 'done', data: { ...result, threadId: resolvedThreadId } };
   }
 
+  async invokeDelegatedAgent(
+    targetAgent: string,
+    input: string,
+  ): Promise<{ runId: string; output: string } | { ok: false; error: ExecuteError }> {
+    const parent = delegationContext.getStore();
+    if (!parent) {
+      return {
+        ok: false,
+        error: {
+          code: 'NO_DELEGATION_CONTEXT',
+          message: 'invoke_agent is only available during an agent run',
+        },
+      };
+    }
+
+    const maxDepth = resolveMaxDelegationDepth(this.configService);
+    if (parent.depth >= maxDepth) {
+      return {
+        ok: false,
+        error: {
+          code: 'DELEGATION_DEPTH_EXCEEDED',
+          message: `delegation depth exceeded (max ${maxDepth})`,
+        },
+      };
+    }
+
+    if (targetAgent === parent.agentName || parent.agentStack.includes(targetAgent)) {
+      return {
+        ok: false,
+        error: {
+          code: 'DELEGATION_CYCLE',
+          message: `agent "${targetAgent}" is already on the delegation stack`,
+        },
+      };
+    }
+
+    const agent = this.agentScannerService.get(targetAgent);
+    if (!agent) {
+      return {
+        ok: false,
+        error: {
+          code: 'AGENT_NOT_FOUND',
+          message: `agent not found: ${targetAgent}`,
+        },
+      };
+    }
+
+    const guardrailResult = this.guardrailService.check(input);
+    if (!guardrailResult.safe) {
+      return {
+        ok: false,
+        error: {
+          code: 'GUARDRAIL_BLOCKED',
+          message: guardrailResult.reason ?? 'Request blocked by guardrail.',
+        },
+      };
+    }
+
+    const childRunId = this.traceService.createRun({ agentName: targetAgent, input });
+    const startedAt = Date.now();
+    const delegationStep: Step = {
+      type: 'delegation',
+      iteration: parent.iteration,
+      agent: targetAgent,
+      childRunId,
+      status: 'running',
+      startedAt,
+      steps: [],
+    };
+
+    parent.parentSteps.push(delegationStep);
+    this.traceService.addStep(parent.runId, delegationStep);
+    parent.emit?.({ event: 'step', data: delegationStep });
+
+    const childSteps = delegationStep.steps!;
+    const childContext = this.buildContext(targetAgent, input, null);
+
+    const forwardChildStep: StepEmitter | undefined = parent.emit
+      ? (event) => {
+          if (event.event !== 'step') {
+            return;
+          }
+          parent.emit?.({
+            event: 'step',
+            data: {
+              ...event.data,
+              agent: targetAgent,
+              parentRunId: parent.runId,
+            },
+          });
+        }
+      : undefined;
+
+    const childResult = await runWithDelegationContext(
+      {
+        runId: childRunId,
+        agentName: targetAgent,
+        agentStack: [...parent.agentStack, targetAgent],
+        depth: parent.depth + 1,
+        parentSteps: parent.parentSteps,
+        iteration: 0,
+        emit: parent.emit,
+      },
+      () => this.runGraph(childRunId, childContext, childSteps, forwardChildStep),
+    );
+
+    delegationStep.status = 'done';
+    delegationStep.endedAt = Date.now();
+    parent.emit?.({ event: 'step', data: { ...delegationStep } });
+
+    this.traceService.finalize(childRunId, childResult.output);
+
+    return {
+      runId: childRunId,
+      output: childResult.output,
+    };
+  }
+
   private async runGraph(
     runId: string,
     context: RunContext,
     steps: Step[],
-    emit?: StepEmitter,
+    forwardEmit?: StepEmitter,
   ): Promise<Omit<RunResult, 'threadId'>> {
     const maxIterations = resolveMaxIterations(this.configService);
-    const hooks = this.createHooks(steps, runId, emit);
+    const recursionLimit = resolveRecursionLimit(this.configService);
+    const hooks = this.createHooks(steps, runId, forwardEmit);
 
     const graph = buildAgentGraph({
       planner: this.plannerService,
@@ -130,17 +269,14 @@ export class LangGraphOrchestratorService {
       iteration: 0,
       planResult: null,
       executeResult: null,
+      executeBatch: null,
       observation: null,
       output: null,
       done: false,
     };
 
-    const finalState = await graph.invoke(initialState);
-    const output =
-      finalState.output ??
-      finalState.planResult?.action.output ??
-      finalState.planResult?.response.content ??
-      'Reached maximum iterations without a final answer.';
+    const finalState = await graph.invoke(initialState, { recursionLimit });
+    const output = this.resolveGraphOutput(finalState, steps);
 
     return {
       runId,
@@ -155,10 +291,33 @@ export class LangGraphOrchestratorService {
     steps: Step[],
   ): AsyncGenerator<AgentStreamEvent, Omit<RunResult, 'threadId'>> {
     const maxIterations = resolveMaxIterations(this.configService);
+    const recursionLimit = resolveRecursionLimit(this.configService);
     const pending: AgentStreamEvent[] = [];
+    const previous = delegationContext.getStore();
+    let wake: (() => void) | undefined;
+
+    const pulse = (): void => {
+      const notify = wake;
+      wake = undefined;
+      notify?.();
+    };
+
     const emit: StepEmitter = (event) => {
       pending.push(event);
+      previous?.emit?.(event);
+      pulse();
     };
+
+    delegationContext.enterWith({
+      runId,
+      agentName: context.agent.name,
+      agentStack: previous?.agentStack ?? [context.agent.name],
+      depth: previous?.depth ?? 0,
+      parentSteps: previous?.parentSteps ?? steps,
+      iteration: previous?.iteration ?? 0,
+      emit,
+    });
+
     const hooks = this.createHooks(steps, runId, emit);
 
     const graph = buildAgentGraph({
@@ -176,34 +335,63 @@ export class LangGraphOrchestratorService {
       iteration: 0,
       planResult: null,
       executeResult: null,
+      executeBatch: null,
       observation: null,
       output: null,
       done: false,
     };
 
     let finalState: AgentGraphState = initialState;
-    const stream = await graph.stream(initialState, { streamMode: 'updates' });
+    let graphDone = false;
+    let graphError: unknown;
 
-    for await (const chunk of stream) {
-      const update = Object.values(chunk)[0] as Partial<AgentGraphState> | undefined;
-      if (update) {
-        finalState = { ...finalState, ...update };
+    const graphTask = (async (): Promise<void> => {
+      try {
+        const stream = await graph.stream(initialState, {
+          streamMode: 'updates',
+          recursionLimit,
+        });
+
+        for await (const chunk of stream) {
+          const update = Object.values(chunk)[0] as Partial<AgentGraphState> | undefined;
+          if (update) {
+            finalState = { ...finalState, ...update };
+          }
+          pulse();
+        }
+      } catch (error) {
+        graphError = error;
+      } finally {
+        graphDone = true;
+        pulse();
       }
+    })();
 
+    while (!graphDone || pending.length > 0) {
       while (pending.length > 0) {
         yield pending.shift()!;
       }
+
+      if (graphDone) {
+        break;
+      }
+
+      await new Promise<void>((resolve) => {
+        if (pending.length > 0 || graphDone) {
+          resolve();
+          return;
+        }
+        wake = resolve;
+      });
     }
 
-    while (pending.length > 0) {
-      yield pending.shift()!;
+    await graphTask;
+
+    if (graphError) {
+      throw graphError;
     }
 
-    const output =
-      finalState.output ??
-      finalState.planResult?.action.output ??
-      finalState.planResult?.response.content ??
-      'Reached maximum iterations without a final answer.';
+    const output = this.resolveGraphOutput(finalState, steps);
 
     return {
       runId,
@@ -219,23 +407,62 @@ export class LangGraphOrchestratorService {
   ): AgentGraphHooks {
     return {
       onPlanStep: (partial) => {
+        this.syncDelegationIteration(partial.iteration);
         const step = this.recordStep(steps, runId, partial);
         emit?.({ event: 'step', data: step });
       },
       onExecuteStep: (partial) => {
+        this.syncDelegationIteration(partial.iteration);
         const step = this.recordStep(steps, runId, partial);
         emit?.({ event: 'step', data: step });
       },
       onObserveStep: (partial) => {
+        this.syncDelegationIteration(partial.iteration);
         const step = this.recordStep(steps, runId, partial);
         emit?.({ event: 'step', data: step });
       },
       onFinalStep: (partial) => {
+        this.syncDelegationIteration(partial.iteration);
         const step = this.recordStep(steps, runId, partial);
         emit?.({ event: 'delta', data: { content: partial.output as string } });
         emit?.({ event: 'step', data: step });
       },
     };
+  }
+
+  private syncDelegationIteration(iteration: number): void {
+    const context = delegationContext.getStore();
+    if (context) {
+      context.iteration = iteration;
+    }
+  }
+
+  private resolveGraphOutput(finalState: AgentGraphState, steps: Step[]): string {
+    const candidates = [
+      finalState.output,
+      finalState.planResult?.action.output,
+      finalState.planResult?.response.content,
+    ].filter((value): value is string => typeof value === 'string' && value.trim() !== '');
+
+    for (const candidate of candidates) {
+      if (candidate !== MAX_ITER_OUTPUT) {
+        return candidate;
+      }
+    }
+
+    for (let index = steps.length - 1; index >= 0; index -= 1) {
+      const step = steps[index]!;
+      if (
+        step.type === 'final' &&
+        typeof step.output === 'string' &&
+        step.output.trim() !== '' &&
+        step.output !== MAX_ITER_OUTPUT
+      ) {
+        return step.output;
+      }
+    }
+
+    return candidates[0] ?? MAX_ITER_OUTPUT;
   }
 
   private buildContext(
@@ -314,8 +541,14 @@ export class LangGraphOrchestratorService {
   }
 
   private recordStep(steps: Step[], runId: string, step: Step): Step {
-    steps.push(step);
-    this.traceService.addStep(runId, step);
-    return step;
+    const now = Date.now();
+    const recorded: Step = {
+      ...step,
+      startedAt: typeof step.startedAt === 'number' ? step.startedAt : now,
+      endedAt: now,
+    };
+    steps.push(recorded);
+    this.traceService.addStep(runId, recorded);
+    return recorded;
   }
 }

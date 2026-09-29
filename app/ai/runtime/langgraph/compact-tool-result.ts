@@ -1,7 +1,7 @@
 const MODEL_TEXT_LIMIT = 60;
 const MODEL_PAYLOAD_LIMIT = 2400;
 const RAG_HIT_TEXT_LIMIT = 500;
-const RAG_EXCERPT_LIMIT = 160;
+const RAG_EXCERPT_LIMIT = 120;
 const DROPPED_KEYS = new Set([
   'raw_text',
   'highlights',
@@ -24,49 +24,70 @@ function clipRagText(value: string, limit: number): string {
   return `${value.slice(0, limit)}…`;
 }
 
+function compactInvokeAgentResult(result: unknown): Record<string, unknown> | null {
+  if (!result || typeof result !== 'object') {
+    return null;
+  }
+
+  const record = result as Record<string, unknown>;
+  if (typeof record.runId === 'string' && typeof record.output === 'string') {
+    return {
+      runId: record.runId,
+      output: record.output,
+    };
+  }
+
+  if (record.ok === false && record.error !== undefined) {
+    return {
+      ok: false,
+      error: compactToolErrorForModel(record.error),
+    };
+  }
+
+  return null;
+}
+
 function compactRetrieveResult(result: unknown): Record<string, unknown> | null {
   if (!result || typeof result !== 'object') {
     return null;
   }
 
   const record = result as {
-    hits?: Array<{ id?: string; docId?: string; text?: string; score?: number }>;
-    summary?: Array<{ docId?: string; score?: number; excerpt?: string }>;
+    hits?: Array<{ docId?: string; text?: string; score?: number }>;
   };
 
   if (!Array.isArray(record.hits)) {
     return null;
   }
 
-  const summary = Array.isArray(record.summary)
-    ? record.summary.map((item) => ({
-        docId: item.docId,
-        score: item.score,
-        excerpt:
-          typeof item.excerpt === 'string'
-            ? clipRagText(item.excerpt, RAG_EXCERPT_LIMIT)
-            : item.excerpt,
-      }))
-    : record.hits.map((hit) => ({
-        docId: hit.docId,
-        score: hit.score,
-        excerpt:
-          typeof hit.text === 'string'
-            ? clipRagText(hit.text, RAG_EXCERPT_LIMIT)
-            : undefined,
-      }));
+  const byLevel = new Map<string, (typeof record.hits)[number]>();
+  for (const hit of record.hits) {
+    const docId = typeof hit.docId === 'string' ? hit.docId : '';
+    const level = docId.match(/#(L[1-5])$/)?.[1] ?? '';
+    if (!level || byLevel.has(level)) {
+      continue;
+    }
+    byLevel.set(level, hit);
+  }
+
+  const selected =
+    byLevel.size > 0
+      ? (['L1', 'L2', 'L3', 'L4', 'L5'] as const).flatMap((level) => {
+          const hit = byLevel.get(level);
+          return hit ? [hit] : [];
+        })
+      : record.hits.slice(0, 5);
 
   return {
-    summary,
-    hits: record.hits.slice(0, 8).map((hit) => ({
-      id: hit.id,
-      docId: hit.docId,
-      score: hit.score,
-      text:
-        typeof hit.text === 'string'
-          ? clipRagText(hit.text, RAG_HIT_TEXT_LIMIT)
-          : hit.text,
-    })),
+    hits: selected.map((hit) => {
+      const excerptSource = typeof hit.text === 'string' ? hit.text : '';
+      return {
+        docId: hit.docId,
+        excerpt: excerptSource
+          ? clipRagText(excerptSource, RAG_EXCERPT_LIMIT)
+          : undefined,
+      };
+    }),
   };
 }
 
@@ -75,6 +96,18 @@ function compactArray(value: unknown[], depth: number): unknown {
     (item): item is Record<string, unknown> =>
       !!item && typeof item === 'object' && !Array.isArray(item),
   );
+
+  if (
+    objects.length === value.length &&
+    objects.length > 0 &&
+    objects.every(
+      (item) =>
+        typeof item.docId !== 'string' &&
+        (typeof item.requirementId === 'string' || typeof item.threshold === 'string'),
+    )
+  ) {
+    return { requirementCount: objects.length };
+  }
 
   if (
     objects.length === value.length &&
@@ -166,10 +199,25 @@ function idsOnly(value: unknown): unknown {
 
   const record = value as Record<string, unknown>;
   const kept: Record<string, unknown> = {};
-  for (const key of ['jobId', 'id', 'title', 'ok', 'scanned', 'count', 'name']) {
+  for (const key of [
+    'jobId',
+    'id',
+    'docId',
+    'title',
+    'ok',
+    'scanned',
+    'count',
+    'name',
+    'requirementCount',
+  ]) {
     if (key in record) {
       kept[key] = idsOnly(record[key]);
     }
+  }
+  if (typeof record.excerpt === 'string') {
+    kept.excerpt = clipRagText(record.excerpt, RAG_EXCERPT_LIMIT);
+  } else if (typeof record.text === 'string' && typeof record.docId === 'string') {
+    kept.excerpt = clipRagText(record.text, RAG_EXCERPT_LIMIT);
   }
   if (Object.keys(kept).length > 0) {
     return kept;
@@ -178,7 +226,11 @@ function idsOnly(value: unknown): unknown {
 }
 
 export function compactToolResultForModel(result: unknown): unknown {
-  return compactRetrieveResult(result) ?? compactForModel(result, 0);
+  return (
+    compactInvokeAgentResult(result) ??
+    compactRetrieveResult(result) ??
+    compactForModel(result, 0)
+  );
 }
 
 export function compactToolErrorForModel(error: unknown): unknown {

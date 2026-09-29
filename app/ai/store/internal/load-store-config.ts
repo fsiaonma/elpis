@@ -4,6 +4,9 @@ import { ConfigService } from '../../../config/config.service';
 interface VectorStoreConfig {
   path?: string;
   fixturesPath?: string;
+  driver?: string;
+  url?: string;
+  collection?: string;
 }
 
 interface StoreConfig {
@@ -27,9 +30,58 @@ export function resolveTraceStorePath(configService: ConfigService): string {
   return path.resolve(process.cwd(), '.elpis', 'trace');
 }
 
-export function resolveVectorStorePath(configService: ConfigService): string {
+function getVectorStoreConfig(
+  configService: ConfigService,
+): string | VectorStoreConfig | undefined {
   const store = getStoreConfig(configService);
-  const vector = store.vector;
+  return store.vector;
+}
+
+export function resolveVectorStoreDriver(configService: ConfigService): string {
+  const vector = getVectorStoreConfig(configService);
+
+  if (vector && typeof vector === 'object') {
+    const driver = vector.driver?.trim().toLowerCase();
+    if (driver) {
+      return driver;
+    }
+  }
+
+  return 'file';
+}
+
+export function resolveQdrantVectorStoreUrl(configService: ConfigService): string {
+  const vector = getVectorStoreConfig(configService);
+
+  if (
+    vector &&
+    typeof vector === 'object' &&
+    typeof vector.url === 'string' &&
+    vector.url.trim() !== ''
+  ) {
+    return vector.url.trim();
+  }
+
+  return 'http://127.0.0.1:6333';
+}
+
+export function resolveQdrantCollection(configService: ConfigService): string {
+  const vector = getVectorStoreConfig(configService);
+
+  if (
+    vector &&
+    typeof vector === 'object' &&
+    typeof vector.collection === 'string' &&
+    vector.collection.trim() !== ''
+  ) {
+    return vector.collection.trim();
+  }
+
+  return 'rubric';
+}
+
+export function resolveVectorStorePath(configService: ConfigService): string {
+  const vector = getVectorStoreConfig(configService);
 
   if (typeof vector === 'string' && vector.trim() !== '') {
     return path.resolve(vector);

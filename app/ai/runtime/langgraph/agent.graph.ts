@@ -1,8 +1,15 @@
 import { END, START, StateGraph } from '@langchain/langgraph';
-import { ExecuteResult, Step } from '../../contracts';
+import {
+  ExecuteResult,
+  LlmMessage,
+  PlanAction,
+  PlanActionType,
+  Step,
+} from '../../contracts';
 import { ExecutorService } from '../../tool/executor.service';
 import { LangChainPlannerService } from '../langchain/langchain-planner.service';
 import { AgentGraphAnnotation, AgentGraphState } from './agent.state';
+import { observeToolResult } from './compact-tool-result';
 
 export interface AgentGraphDefinition {
   nodes: string[];
@@ -32,6 +39,8 @@ export interface BuildAgentGraphOptions {
   hooks: AgentGraphHooks;
 }
 
+const MAX_ITER_OUTPUT = 'Reached maximum iterations without a final answer.';
+
 export function describeAgentGraph(): AgentGraphDefinition {
   return {
     nodes: ['plan', 'execute', 'observe'],
@@ -59,6 +68,17 @@ export function buildAgentGraph(options: BuildAgentGraphOptions) {
   return graph.compile();
 }
 
+function resolveMaxIterationOutput(state: AgentGraphState): string {
+  if (
+    typeof state.output === 'string' &&
+    state.output.trim() &&
+    state.output !== MAX_ITER_OUTPUT
+  ) {
+    return state.output;
+  }
+  return MAX_ITER_OUTPUT;
+}
+
 async function planNode(
   state: AgentGraphState,
   options: BuildAgentGraphOptions,
@@ -66,7 +86,7 @@ async function planNode(
   const iteration = state.iteration + 1;
 
   if (iteration > options.maxIterations && !state.done) {
-    const output = 'Reached maximum iterations without a final answer.';
+    const output = resolveMaxIterationOutput(state);
     options.hooks.onFinalStep({
       type: 'final',
       iteration,
@@ -112,6 +132,8 @@ async function planNode(
       planResult,
       output,
       done: true,
+      executeBatch: null,
+      executeResult: null,
     };
   }
 
@@ -120,6 +142,7 @@ async function planNode(
     iteration,
     planResult,
     executeResult: null,
+    executeBatch: null,
     observation: null,
     done: false,
   };
@@ -129,31 +152,43 @@ async function executeNode(
   state: AgentGraphState,
   options: BuildAgentGraphOptions,
 ): Promise<Partial<AgentGraphState>> {
-  const action = state.planResult?.action;
-  if (!action || action.type === 'final') {
+  const toolCalls = collectToolCalls(state, options);
+  if (toolCalls.length === 0) {
     return {};
   }
 
-  const executeResult = await options.executor.execute(action, {
-    skillNames: options.skillNames,
-    toolNames: options.toolNames,
-  });
+  if (toolCalls.length === 1) {
+    const call = toolCalls[0]!;
+    const executeResult = await options.executor.execute(call.action, {
+      skillNames: options.skillNames,
+      toolNames: options.toolNames,
+    });
+    recordExecuteStep(options, state.iteration, call.action, executeResult);
 
-  options.hooks.onExecuteStep({
-    type: action.type,
-    iteration: state.iteration,
-    name: action.name,
-    args: action.args,
-    result: executeResult.success ? executeResult.result : undefined,
-    error: executeResult.error,
-    ...(action.type === 'tool' && executeResult.source
-      ? { source: executeResult.source }
-      : {}),
-    node: 'execute',
-  });
+    return {
+      executeResult,
+      executeBatch: null,
+    };
+  }
+
+  const executeBatch = await Promise.all(
+    toolCalls.map(async (call) => {
+      const executeResult = await options.executor.execute(call.action, {
+        skillNames: options.skillNames,
+        toolNames: options.toolNames,
+      });
+      recordExecuteStep(options, state.iteration, call.action, executeResult);
+      return {
+        toolCallId: call.toolCallId,
+        action: call.action,
+        executeResult,
+      };
+    }),
+  );
 
   return {
-    executeResult,
+    executeBatch,
+    executeResult: null,
   };
 }
 
@@ -161,6 +196,53 @@ async function observeNode(
   state: AgentGraphState,
   options: BuildAgentGraphOptions,
 ): Promise<Partial<AgentGraphState>> {
+  const batch = state.executeBatch;
+  if (batch?.length && state.planResult) {
+    const observations = batch.map((item) => observe(item.executeResult));
+    options.hooks.onObserveStep({
+      type: 'observe',
+      iteration: state.iteration,
+      observation: observations.join('\n'),
+      node: 'observe',
+    });
+
+    const messages: LlmMessage[] = [
+      ...state.messages,
+      ...batch.map((item, index) => ({
+        role: 'tool',
+        tool_call_id: item.toolCallId,
+        content: observations[index] ?? '',
+      })),
+    ];
+
+    if (state.iteration >= options.maxIterations) {
+      const output = resolveMaxIterationOutput(state);
+      options.hooks.onFinalStep({
+        type: 'final',
+        iteration: state.iteration,
+        output,
+        node: 'observe',
+      });
+
+      return {
+        messages,
+        observation: observations.join('\n'),
+        output,
+        done: true,
+        executeBatch: null,
+      };
+    }
+
+    return {
+      messages,
+      observation: observations.join('\n'),
+      planResult: null,
+      executeResult: null,
+      executeBatch: null,
+      done: false,
+    };
+  }
+
   const executeResult = state.executeResult;
   if (!executeResult || !state.planResult) {
     return {};
@@ -175,7 +257,7 @@ async function observeNode(
   });
 
   const toolCallId = state.planResult.toolCallId ?? crypto.randomUUID();
-  const messages = [
+  const messages: LlmMessage[] = [
     ...state.messages,
     {
       role: 'tool',
@@ -185,7 +267,7 @@ async function observeNode(
   ];
 
   if (state.iteration >= options.maxIterations) {
-    const output = 'Reached maximum iterations without a final answer.';
+    const output = resolveMaxIterationOutput(state);
     options.hooks.onFinalStep({
       type: 'final',
       iteration: state.iteration,
@@ -206,14 +288,93 @@ async function observeNode(
     observation,
     planResult: null,
     executeResult: null,
+    executeBatch: null,
     done: false,
   };
 }
 
-function observe(result: ExecuteResult): string {
-  if (result.success) {
-    return JSON.stringify({ ok: true, result: result.result });
+function recordExecuteStep(
+  options: BuildAgentGraphOptions,
+  iteration: number,
+  action: PlanAction,
+  executeResult: ExecuteResult,
+): void {
+  if (action.type === 'tool' && action.name === 'invoke_agent') {
+    return;
   }
 
-  return JSON.stringify({ ok: false, error: result.error });
+  options.hooks.onExecuteStep({
+    type: action.type as 'skill' | 'tool',
+    iteration,
+    name: action.name,
+    args: action.args,
+    result: executeResult.success ? executeResult.result : undefined,
+    error: executeResult.error,
+    ...(action.type === 'tool' && executeResult.source
+      ? { source: executeResult.source }
+      : {}),
+    node: 'execute',
+  });
+}
+
+interface CollectedToolCall {
+  toolCallId: string;
+  action: PlanAction;
+}
+
+function collectToolCalls(
+  state: AgentGraphState,
+  options: BuildAgentGraphOptions,
+): CollectedToolCall[] {
+  const response = state.planResult?.response;
+  if (response?.tool_calls?.length) {
+    return response.tool_calls.map((call) => {
+      const name = call.function.name;
+      return {
+        toolCallId: call.id ?? crypto.randomUUID(),
+        action: {
+          type: resolveActionType(name, options) ?? 'tool',
+          name,
+          args: parseToolArgs(call.function.arguments),
+        },
+      };
+    });
+  }
+
+  const action = state.planResult?.action;
+  if (!action || action.type === 'final' || !action.name) {
+    return [];
+  }
+
+  return [
+    {
+      toolCallId: state.planResult?.toolCallId ?? crypto.randomUUID(),
+      action,
+    },
+  ];
+}
+
+function resolveActionType(
+  name: string,
+  options: BuildAgentGraphOptions,
+): PlanActionType | null {
+  if (options.skillNames.has(name)) {
+    return 'skill';
+  }
+  if (options.toolNames.has(name)) {
+    return 'tool';
+  }
+  return null;
+}
+
+function parseToolArgs(raw: string): unknown {
+  try {
+    return JSON.parse(raw || '{}') as unknown;
+  } catch {
+    return {};
+  }
+}
+
+function observe(result: ExecuteResult): string {
+  return observeToolResult(result.success, result.result, result.error);
 }
