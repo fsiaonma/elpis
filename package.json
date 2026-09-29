@@ -11,7 +11,9 @@
   "files": [
     "dist",
     "index.js",
+    "index.d.ts",
     "nest.js",
+    "nest.d.ts",
     "app",
     "config",
     "model"
@@ -32,6 +34,9 @@
   "dependencies": {
     "@babel/runtime": "^7.28.3",
     "@element-plus/icons-vue": "^2.3.1",
+    "@langchain/core": "^0.3.80",
+    "@langchain/langgraph": "^0.2.74",
+    "@langchain/openai": "^0.3.17",
     "@nestjs/common": "^12",
     "@nestjs/core": "^12",
     "@nestjs/platform-express": "^12",
@@ -53,8 +58,8 @@
     "moment": "^2.29.4",
     "mysql2": "^3.23.1",
     "node-schedule": "^2.1.1",
-    "nunjucks": "^3.2.4",
     "nodemon": "^1.19.2",
+    "nunjucks": "^3.2.4",
     "path": "^0.12.7",
     "pinia": "^2.1.6",
     "reflect-metadata": "^0.2.2",
@@ -64,7 +69,8 @@
     "vue": "^3.3.4",
     "vue-json-viewer": "^3.0.4",
     "vue-router": "^4.2.4",
-    "vuex": "^4.1.0"
+    "vuex": "^4.1.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@nestjs/cli": "^12",

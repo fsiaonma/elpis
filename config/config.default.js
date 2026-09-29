@@ -1,3 +1,8 @@
 module.exports = {
-	name: 'elpis'
-}
+	name: 'elpis',
+	ai: {
+		agent: {
+			threadEnabled: false,
+		},
+	},
+};

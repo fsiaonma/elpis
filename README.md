@@ -31,13 +31,13 @@
 | `dist/` | Nest 编译产物 |
 | `index.js` | 对外入口：serverStart / frontendBuild |
 | `nest.js` | Nest 公共导出（BaseController、ConfigService 等） |
+| `app/ai/` | Agent / MCP / RAG / Skill 等 AI 能力（Part3） |
 | `test/` | 框架回归测试 |
-
-> Part3 规划：`app/ai/` 目录。
+| `sdd/` | 设计与任务文档（part1–part3） |
 
 ## 安装与依赖
 
-包名：`@fsiaonma/elpis`。对外入口为根目录 `index.js`（`serverStart` / `frontendBuild`）；Nest 侧类型与基类见 `nest.js` 与 `exports`。
+包名：`@fsiaonma/elpis`。对外入口为根目录 `index.js`（`serverStart` / `frontendBuild`）；Nest 侧见 `nest.js` 与 `package.json` 的 `exports`（含 `./types/express`）。
 
 ### 克隆并在框架仓安装
 

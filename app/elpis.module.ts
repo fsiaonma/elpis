@@ -3,6 +3,7 @@ import { Module as NodeModule } from 'module';
 import { createRequire } from 'module';
 import * as fs from 'fs';
 import * as path from 'path';
+import { AiModule } from './ai/ai.module';
 import { FallbackModule } from './common/fallback/fallback.module';
 import { applyStaticAssets } from './common/middleware';
 import { ExtendModule } from './extend/extend.module';
@@ -69,6 +70,7 @@ function buildElpisImports(): Type<unknown>[] {
     ExtendModule,
     ProjectModule,
     ViewModule,
+    AiModule,
     ...scanBusinessModules(),
     FallbackModule,
   ];
