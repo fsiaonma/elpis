@@ -1,20 +1,9 @@
-// 引入 eplis-core
-const ElpisCore = require('./elpis-core');
+const { bootstrap } = require('./dist/main');
 // 引入 前端工程化构建方法
-const FEBuildDev = require('./app/webpack/dev.js');
-const FEBuildProd = require('./app/webpack/prod.js');
+const FEBuildDev = require('./app/vite/dev.js');
+const FEBuildProd = require('./app/vite/prod.js');
 
 module.exports = {
-	/**
-	 * 服务端基础
-	 */
-	Controller: {
-		Base: require('./app/controller/base.js')
-	},
-	Service: {
-		Base: require('./app/service/base.js')
-	},
-
 	/**
 	 * 编译构建前端工程
 	 * @params env 环境变量 local/production
@@ -29,10 +18,9 @@ module.exports = {
 
 	/**
 	 * 启动 elpis 
-	 * @params options 项目配置，透传到 elpis-core
+	 * @params options 项目配置，透传到 Nest bootstrap
 	 */
 	serverStart(options = {}) {
-		const app = ElpisCore.start(options);
-		return app;
+		return bootstrap(options);
 	}
 }

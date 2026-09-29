@@ -1,4 +1,5 @@
-const md5 = require('md5');
+import md5 from 'md5';
+import axios from 'axios';
 import { ElMessage } from 'element-plus';
 
 /**

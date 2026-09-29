@@ -1,3 +1,6 @@
 node_modules
 config.local.js
 app/public/dist
+dist
+outputs
+*.tsbuildinfo

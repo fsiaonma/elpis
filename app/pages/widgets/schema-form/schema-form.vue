@@ -16,8 +16,7 @@
 <script setup>
 import { ref, toRefs, provide } from 'vue';
 import FormItemConfig from './form-item-config.js';
-
-const Ajv = require('ajv');
+import Ajv from 'ajv';
 const ajv = new Ajv();
 provide('ajv', ajv);
 

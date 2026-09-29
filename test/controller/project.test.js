@@ -1,20 +1,35 @@
 const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
 const supertest = require('supertest');
 const md5 = require('md5');
-const eplisCore = require('../../elpis-core');
 
 const signKey = 'klx05hb3n1c9ujp8uhxbs2ikkiowp212';
 const st = Date.now();
+const demoDir = path.resolve(__dirname, '../../../elpis-demo');
 
-describe('测试 project 相关接口', function() {
+const describeFn = fs.existsSync(demoDir) ? describe : describe.skip;
+
+describeFn('测试 project 相关接口', function() {
 	this.timeout(60000);
 
 	let modelList;
 	const projectList = [];
 	let request;
+	let app;
+	const originalCwd = process.cwd();
+	const modulesDir = path.join(demoDir, 'dist/modules');
+	const modulesBak = path.join(demoDir, 'dist/modules.__test_bak__');
+	let modulesHidden = false;
 
 	it('启动服务', async () => {
-		const app = await eplisCore.start();
+		if (fs.existsSync(modulesDir)) {
+			fs.renameSync(modulesDir, modulesBak);
+			modulesHidden = true;
+		}
+		process.chdir(demoDir);
+		const { bootstrap } = require('../../dist/main');
+		app = await bootstrap({});
 		modelList = require('../../model/index.js')(app);
 		modelList.forEach(modelItem => {
 			const { project } = modelItem;
@@ -22,7 +37,17 @@ describe('测试 project 相关接口', function() {
 				projectList.push(project[pKey]);
 			}
 		});
-		request = supertest(app.listen());
+		request = supertest(app.getHttpServer());
+	});
+
+	after(async function() {
+		if (app) {
+			await app.close();
+		}
+		process.chdir(originalCwd);
+		if (modulesHidden && fs.existsSync(modulesBak)) {
+			fs.renameSync(modulesBak, modulesDir);
+		}
 	});
 
 	it ('GET /api/project without proj_key', async () => {
@@ -41,7 +66,7 @@ describe('测试 project 相关接口', function() {
 		let tmpRequest = request.get('/api/project');
 		tmpRequest = tmpRequest.set('s_t', st);
 		tmpRequest = tmpRequest.set('s_sign', md5(`${signKey}_${st}`));
-		temRequest = tmpRequest.query({
+		tmpRequest = tmpRequest.query({
 			proj_key: 'xxxxxxxxxx'
 		});
 		const res = await tmpRequest;
@@ -62,7 +87,7 @@ describe('测试 project 相关接口', function() {
 			let tmpRequest = request.get('/api/project');
 			tmpRequest = tmpRequest.set('s_t', st);
 			tmpRequest = tmpRequest.set('s_sign', md5(`${signKey}_${st}`));
-			temRequest = tmpRequest.query({
+			tmpRequest = tmpRequest.query({
 				proj_key: projKey
 			});
 			const res = await tmpRequest;
@@ -81,7 +106,6 @@ describe('测试 project 相关接口', function() {
 			});
 		}
 
-		// 校验 menu 菜单
 		function checkMenuItem(menuItem) {
 			console.log('---------- GET /api/project with proj_key - menuKey:', menuItem.key);
 			assert(menuItem.key);
@@ -100,7 +124,6 @@ describe('测试 project 相关接口', function() {
 			}
 		}
 
-		// 检查 module 菜单配置
 		function checkModule(menuItem) {
 			const { moduleType } = menuItem;
 			assert(moduleType);
@@ -162,7 +185,7 @@ describe('测试 project 相关接口', function() {
 		let tmpRequest = request.get('/api/project/list');
 		tmpRequest = tmpRequest.set('s_t', st);
 		tmpRequest = tmpRequest.set('s_sign', md5(`${signKey}_${st}`));
-		temRequest = tmpRequest.query({
+		tmpRequest = tmpRequest.query({
 			proj_key: projKey
 		});
 		const res = await tmpRequest;

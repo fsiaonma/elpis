@@ -1,95 +1,149 @@
 # elpis
 
-## 一个企业级全栈应用框架。
+一个企业级全栈应用框架。HTTP 内核已从 Koa 迁移为 NestJS；前端构建器使用 Vite。业务仓（如 elpis-demo）通过 Nest Module 扩展框架能力。
 
-包名：`@fsiaonma/elpis`，入口为仓库根目录的 `index.js`。
+## Part2 成果
 
----
+- Koa 内核与 loader 已删除，框架与 demo 统一 Nest Module 写法
+- `serverStart()` / `frontendBuild()` 签名不变，8080 监听不变
+- API 路径、返回格式（442 / 445 / 446）、cookie 行为与 1.0 一致
+- 框架内核归位 `app/`（与 pages、vite、public、view 同级）
+- 业务 Module 由 demo `dist/modules/**/*.module.js` 扫描注入，Fallback 最后
+
+## 顶层目录
+
+| 路径 | 说明 |
+|------|------|
+| `app/main.ts` | Nest bootstrap 入口，编译到 `dist/main.js` |
+| `app/app.module.ts` | 根 Module：ConfigModule + ElpisModule.register() |
+| `app/elpis.module.ts` | 框架 Module 聚合：Extend / Project / View / 扫描模块 / Fallback |
+| `app/common/` | Guard / Pipe / Filter / Interceptor / 静态兜底 |
+| `app/config/` | 配置 Module |
+| `app/extend/` | Database / Logger Provider |
+| `app/modules/` | 框架内置 Module（project、view） |
+| `app/pages/` | 前端页面入口与组件 |
+| `app/vite/` | Vite 构建器（dev / prod） |
+| `app/public/` | 框架静态资源 |
+| `app/view/` | `.tpl` 模板 |
+| `app/types/` | 类型契约（express Request.projKey 增强） |
+| `config/` | 框架默认配置 |
+| `model/` | model 加载器（index.js） |
+| `dist/` | Nest 编译产物 |
+| `index.js` | 对外入口：serverStart / frontendBuild |
+| `nest.js` | Nest 公共导出（BaseController、ConfigService 等） |
+| `test/` | 框架回归测试 |
+
+> Part3 规划：`app/ai/` 目录。
 
 ## 安装与依赖
 
-### 克隆后在本仓库安装
+包名：`@fsiaonma/elpis`。对外入口为根目录 `index.js`（`serverStart` / `frontendBuild`）；Nest 侧类型与基类见 `nest.js` 与 `exports`。
 
-从 Git 拉取代码后，在 **elpis 仓库根目录** 安装依赖（`node_modules` 不会提交，需本地自行安装）：
+### 克隆并在框架仓安装
+
+`node_modules`、`dist` 等不会提交，需在本地生成：
 
 ```bash
 git clone git@github.com:fsiaonma/elpis.git
 cd elpis
 npm install
+npm run build    # 编译 Nest → dist/；index.js 依赖 dist/main.js
+```
+
+开发改 TypeScript 时可开监听编译：
+
+```bash
+npm run build:watch
 ```
 
 ### 在业务项目中安装
 
-业务项目通过 npm 依赖本包时，在 **业务项目根目录** 执行：
+在 **业务仓**（如 elpis-demo）根目录：
 
 ```bash
 npm install @fsiaonma/elpis
 ```
 
-若尚未发布到 npm，可在业务项目的 `package.json` 里用 Git 地址等形式声明依赖，再执行 `npm install`。
+未发布到 npm 时，可在业务仓 `package.json` 用 Git 等方式声明依赖后执行 `npm install`。
 
 ### 本地联调（npm link）
 
-改 elpis 源码时，希望业务项目立刻用到当前目录的版本，可以用 **npm link**：
-
-**1. 在 elpis 仓库根目录**（需已 `npm install`）：
+改框架源码时，让业务仓指向本机 elpis 目录：
 
 ```bash
+# 1. 框架仓 elpis：安装依赖并编译，再注册全局 link
 cd /path/to/elpis
 npm install
+npm run build          # 或另开终端 npm run build:watch
 npm link
-```
 
-会在全局注册包名 `@fsiaonma/elpis`，指向当前目录。
-
-**2. 在业务项目根目录**：
-
-```bash
-cd /path/to/your-business-app
+# 2. 业务仓 elpis-demo
+cd /path/to/elpis-demo
 npm link @fsiaonma/elpis
 ```
 
-之后业务项目 `require('@fsiaonma/elpis')` 会解析到本地 elpis 目录；修改 elpis 后重启业务进程即可验证（前端构建若带缓存，必要时清缓存或重新构建）。
+改完 `app/**/*.ts` 后需重新 `npm run build`（或保持 `build:watch`），业务仓重启 Nest 进程后生效。
 
-**取消 link，恢复 registry / lockfile 里的正式依赖：**
+**取消 link：**
 
 ```bash
-# 业务项目
-cd /path/to/your-business-app
+cd /path/to/elpis-demo
 npm unlink @fsiaonma/elpis
 npm install
 
-# elpis 仓库（可选，取消全局 link）
 cd /path/to/elpis
-npm unlink
+npm unlink    # 可选
 ```
 
-> 注意：link 期间业务项目的 `node_modules/@fsiaonma/elpis` 是指向本地的符号链接；提交代码时不要误把 link 状态当成已发布版本。
-
----
-
-## 常用命令
-
-在 elpis 仓库根目录：
+### 常用命令（框架仓）
 
 | 命令 | 说明 |
 |------|------|
 | `npm install` | 安装依赖 |
-| `npm link` | 将 `@fsiaonma/elpis` 注册到全局，供其他项目 `npm link @fsiaonma/elpis` |
-| `npm run lint` | ESLint 检查（提交前 ghooks 也会跑） |
-| `npm test` | 运行 Mocha 测试（`_ENV=local`） |
+| `npm run build` | Nest 编译到 `dist/` |
+| `npm run build:watch` | 监听 TypeScript 编译 |
+| `npm link` | 全局注册 `@fsiaonma/elpis`，供业务仓 link |
+| `npm run lint` | ESLint（pre-commit 会执行） |
+| `npm test` | Mocha 回归（`_ENV=local`） |
 
----
+### 本地忽略项（.gitignore）
 
-## 本地配置与忽略项
+- `node_modules` — 执行 `npm install` 生成  
+- `dist`、`*.tsbuildinfo` — `npm run build` 生成  
+- `config.local.js` — 本地私有配置  
+- `app/public/dist`、`outputs` — 前端构建产物  
 
-`.gitignore` 中常见忽略：
+## 双终端启动（开发）
 
-- `node_modules` — 依赖目录，用 `npm install` 生成
-- `config.local.js` — 本地私有配置，可复制 `config/config.default.js` 思路自行添加
-- `app/public/dist` — 前端构建产物
+在业务仓（elpis-demo）开两个终端：
 
----
+```bash
+# 终端 A：Vite Dev Server，出脚本 / HMR
+npm run build:dev
+# → http://127.0.0.1:9002
+
+# 终端 B：Nest 读页面、渲染 .tpl
+npm run dev
+# → http://127.0.0.1:8080
+```
+
+生产：
+
+```bash
+npm run build:prod   # 产物落 app/public/dist/prod，并写 entry.*.tpl
+npm run prod         # Nest 8080 读 /dist/prod/
+```
+
+## 与 1.0 对照
+
+| | Koa 1.0 | Nest（本版） |
+|--|---------|--------------|
+| HTTP 内核 | elpis-core + Koa loader | NestFactory + Module 扫描 |
+| 业务扩展 | controller / router / service | demo `app/modules/` → `dist/modules/` |
+| 多入口 | 扫两棵 `entry.*.js` 树 merge | 同样扫两棵树，进 `rollupOptions.input` |
+| 页面模板 | HtmlWebpackPlugin 写 `.tpl` | `elpis-tpl-plugin` 写 `.tpl` |
+| 开发进程 | Vite :9002 + Koa :8080 | Vite :9002 + Nest :8080（双终端不变） |
+| 对外 API | `frontendBuild(env)` / `serverStart()` | 签名不变 |
 
 ### model配置 
 ```javascript
@@ -98,7 +152,7 @@ npm unlink
   name: '', // 名称
   desc: '', // 描述
   icon: '', // icon
-  homePage: ‘’, // 首页(项目配置)
+  homePage: '', // 首页(项目配置)
   // 头部菜单
   menu: [{
     key: '', // 菜单唯一描述，
@@ -258,20 +312,13 @@ const app = serverStart({});
 ```
 
 
-### 自定义服务端
-- router-schema
-- router
-- controller
-- service
-- extend
-- config
-
-
 ### 前端构建
 ```javascript
 const { frontendBuild } = require('@fsiaonma/elpis');
 
-// 编译构建前端工程
+// 编译构建前端工程（签名不变）
+// local → Vite createServer :9002
+// production → Vite build → app/public/dist/prod
 frontendBuild(process.env._ENV);
 ```
 

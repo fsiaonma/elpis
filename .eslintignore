@@ -1,3 +1,6 @@
 node_modules/
 public/
 docs/
+**/*.ts
+**/*.d.ts
+dist/
