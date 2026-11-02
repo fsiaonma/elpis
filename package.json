@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://e.coding.net/zhexuanqianduan/elpis/elpis.git"
+    "url": "git+https://github.com/fsiaonma/elpis.git"
   },
   "author": "哲玄",
   "license": "ISC",
