@@ -2,6 +2,8 @@
 
 一个企业级全栈应用框架。HTTP 内核已从 Koa 迁移为 NestJS；前端构建器使用 Vite。业务仓（如 elpis-demo）通过 Nest Module 扩展框架能力。
 
+在线文档：<https://fsiaonma.github.io/elpis/>。本地预览先执行 `npm run docs:build`，再打开 `docs/index.html`。
+
 ## Part2 成果
 
 - Koa 内核与 loader 已删除，框架与 demo 统一 Nest Module 写法

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5fd3a5"/>
+      <stop offset="1" stop-color="#22a876"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#22a876"/>
+    </marker>
+    <marker id="arr-o" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ff8a3d"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#3b82f0" flood-opacity="0.2"/></filter>
+  </defs>
+  <rect width="1200" height="560" rx="24" fill="url(#bg)"/>
+  <text x="40" y="48" font-size="20" font-weight="700" fill="#1e5fc4">Agent 运行循环（LangGraph）</text>
+  <text x="40" y="72" font-size="13" fill="#5d7c99">POST /api/ai/agent/run 或 /agent/run/stream，每一步都会写入 steps 与 Trace</text>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="220" width="150" height="90" rx="16" fill="#33405a"/>
+  </g>
+  <text x="115" y="258" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">用户输入</text>
+  <text x="115" y="282" font-size="12" fill="#cbd5e1" text-anchor="middle">agent · input · threadId</text>
+
+  <g filter="url(#sh)">
+    <rect x="232" y="220" width="150" height="90" rx="16" fill="url(#org)"/>
+  </g>
+  <text x="307" y="258" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">Guardrail</text>
+  <text x="307" y="282" font-size="12" fill="#fff" text-anchor="middle" opacity=".92">关键词 / 正则拦截</text>
+  <path d="M192 265 L228 265" stroke="#3b82f0" stroke-width="2.5" marker-end="url(#arr)"/>
+  <path d="M307 312 L307 400" stroke="#ff8a3d" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arr-o)"/>
+  <rect x="240" y="404" width="134" height="34" rx="17" fill="#fff1e6"/>
+  <text x="307" y="426" font-size="12.5" fill="#c2410c" text-anchor="middle" font-weight="600">step: guardrail 拦截</text>
+
+  <circle cx="660" cy="270" r="150" fill="none" stroke="#bcd7ff" stroke-width="2" stroke-dasharray="6 6"/>
+
+  <g filter="url(#sh)">
+    <circle cx="660" cy="128" r="62" fill="url(#node)"/>
+  </g>
+  <text x="660" y="124" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">plan</text>
+  <text x="660" y="146" font-size="12" fill="#fff" text-anchor="middle" opacity=".9">LLM 决策</text>
+
+  <g filter="url(#sh)">
+    <circle cx="800" cy="350" r="62" fill="url(#node)"/>
+  </g>
+  <text x="800" y="346" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">execute</text>
+  <text x="800" y="368" font-size="12" fill="#fff" text-anchor="middle" opacity=".9">并行调用工具</text>
+
+  <g filter="url(#sh)">
+    <circle cx="520" cy="350" r="62" fill="url(#node)"/>
+  </g>
+  <text x="520" y="346" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">observe</text>
+  <text x="520" y="368" font-size="12" fill="#fff" text-anchor="middle" opacity=".9">回填结果</text>
+
+  <path d="M712 160 Q790 220 800 284" stroke="#3b82f0" stroke-width="3" fill="none" marker-end="url(#arr)"/>
+  <text x="784" y="208" font-size="12" fill="#1e5fc4">tool_calls</text>
+  <path d="M736 360 L588 360" stroke="#3b82f0" stroke-width="3" fill="none" marker-end="url(#arr)"/>
+  <path d="M512 286 Q530 200 600 150" stroke="#3b82f0" stroke-width="3" fill="none" marker-end="url(#arr)"/>
+  <text x="470" y="220" font-size="12" fill="#1e5fc4">下一轮</text>
+  <path d="M384 265 Q470 160 596 128" stroke="#3b82f0" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
+
+  <path d="M722 118 L940 118" stroke="#22a876" stroke-width="3" marker-end="url(#arr-g)"/>
+  <text x="760" y="106" font-size="12" fill="#15805a">无工具调用 / 达到 maxIterations</text>
+  <g filter="url(#sh)">
+    <rect x="946" y="78" width="200" height="82" rx="16" fill="url(#green)"/>
+  </g>
+  <text x="1046" y="114" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">final</text>
+  <text x="1046" y="138" font-size="12" fill="#fff" text-anchor="middle">RunResult · SSE done</text>
+
+  <g font-size="13" fill="#1e3a66" text-anchor="middle">
+    <rect x="900" y="232" width="250" height="250" rx="16" fill="#fff"/>
+    <text x="1025" y="262" font-size="14" font-weight="700" fill="#1e5fc4">execute 可调用</text>
+    <rect x="920" y="278" width="210" height="34" rx="9" fill="#eef5ff"/><text x="1025" y="300">Skill · 业务技能</text>
+    <rect x="920" y="318" width="210" height="34" rx="9" fill="#eef5ff"/><text x="1025" y="340">Tool · 自定义注册</text>
+    <rect x="920" y="358" width="210" height="34" rx="9" fill="#eef5ff"/><text x="1025" y="380">MCP · 外部服务</text>
+    <rect x="920" y="398" width="210" height="34" rx="9" fill="#eef5ff"/><text x="1025" y="420">retrieve · RAG 检索</text>
+    <rect x="920" y="438" width="210" height="34" rx="9" fill="#fff4ea"/><text x="1025" y="460" fill="#c2410c">invoke_agent · 委派子 Agent</text>
+  </g>
+  <path d="M864 360 L896 360" stroke="#3b82f0" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <g font-size="13" text-anchor="middle">
+    <rect x="420" y="470" width="180" height="56" rx="14" fill="#fff"/>
+    <text x="510" y="494" font-weight="700" fill="#1e5fc4">Memory</text>
+    <text x="510" y="514" font-size="11.5" fill="#5d7c99">threadId 多轮上下文</text>
+    <rect x="620" y="470" width="180" height="56" rx="14" fill="#fff"/>
+    <text x="710" y="494" font-weight="700" fill="#1e5fc4">Trace</text>
+    <text x="710" y="514" font-size="11.5" fill="#5d7c99">.elpis/trace/&lt;runId&gt;</text>
+  </g>
+</svg>

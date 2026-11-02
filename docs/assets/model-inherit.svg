@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="m" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="p" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#3b82f0" flood-opacity="0.18"/></filter>
+  </defs>
+  <rect width="1200" height="380" rx="24" fill="url(#bg)"/>
+  <text x="40" y="48" font-size="20" font-weight="700" fill="#1e5fc4">model 与 project 的继承：一次配置，多个项目复用</text>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="140" width="250" height="120" rx="18" fill="url(#m)"/>
+  </g>
+  <text x="165" y="186" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">model.js</text>
+  <text x="165" y="212" font-size="13" fill="#fff" text-anchor="middle" opacity=".92">电商模板：商品 / 订单 / 客户</text>
+  <text x="165" y="236" font-size="12" fill="#fff" text-anchor="middle" opacity=".8">model/business/model.js</text>
+
+  <g filter="url(#sh)">
+    <rect x="400" y="76" width="250" height="76" rx="16" fill="url(#p)"/>
+    <rect x="400" y="168" width="250" height="76" rx="16" fill="url(#p)"/>
+    <rect x="400" y="260" width="250" height="76" rx="16" fill="url(#p)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle">
+    <text x="525" y="108" font-size="16" font-weight="700">project/jd.js</text>
+    <text x="525" y="132" font-size="12" opacity=".92">改名、追加「店铺设置」菜单</text>
+    <text x="525" y="200" font-size="16" font-weight="700">project/taobao.js</text>
+    <text x="525" y="224" font-size="12" opacity=".92">覆盖订单为 iframe</text>
+    <text x="525" y="292" font-size="16" font-weight="700">project/pdd.js</text>
+    <text x="525" y="316" font-size="12" opacity=".92">追加侧边栏数据分析</text>
+  </g>
+  <g stroke="#3b82f0" stroke-width="2.5" fill="none" marker-end="url(#arr)">
+    <path d="M292 190 Q340 120 396 114"/>
+    <path d="M292 200 L396 206"/>
+    <path d="M292 210 Q340 290 396 298"/>
+  </g>
+  <text x="330" y="180" font-size="12" fill="#1e5fc4">mergeWith</text>
+
+  <rect x="740" y="76" width="420" height="260" rx="18" fill="#fff"/>
+  <text x="764" y="110" font-size="16" font-weight="700" fill="#1e5fc4">数组按 key 合并规则</text>
+  <g font-size="13.5" fill="#24456e">
+    <rect x="764" y="130" width="90" height="28" rx="14" fill="#eef5ff"/><text x="809" y="149" text-anchor="middle" fill="#1e5fc4" font-weight="600">覆盖</text>
+    <text x="870" y="149">project 与 model 都有同一 key → 深度合并</text>
+    <rect x="764" y="176" width="90" height="28" rx="14" fill="#e9fbf3"/><text x="809" y="195" text-anchor="middle" fill="#15805a" font-weight="600">新增</text>
+    <text x="870" y="195">只有 project 有 → 追加到末尾</text>
+    <rect x="764" y="222" width="90" height="28" rx="14" fill="#fff4ea"/><text x="809" y="241" text-anchor="middle" fill="#c2410c" font-weight="600">保留</text>
+    <text x="870" y="241">只有 model 有 → 原样保留</text>
+  </g>
+  <text x="764" y="290" font-size="12.5" fill="#5d7c99">对象字段按 lodash.mergeWith 深合并；</text>
+  <text x="764" y="312" font-size="12.5" fill="#5d7c99">GET /api/project?proj_key=jd 返回合并后的最终配置</text>
+</svg>

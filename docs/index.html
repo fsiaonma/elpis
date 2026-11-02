@@ -1,0 +1,1255 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elpis · 企业级全栈应用框架</title>
+  <link rel="icon" href="assets/hero.jpg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <!-- @elpis-docs-build version-scripts -->
+  <script>window.ELPIS_VERSION="2.0.0";</script>
+  <script src="./docs.bundle.js?v=2.0.0"></script>
+  <!-- @elpis-docs-build end -->
+  <style>
+    :root {
+      --primary: #68a5fc;
+      --primary-600: #4d8ff5;
+      --primary-700: #3b7be6;
+      --primary-800: #2a63c4;
+      --primary-50: #f2f7ff;
+      --primary-100: #e4efff;
+      --primary-200: #cde1ff;
+      --orange: #ff9a3c;
+      --orange-soft: #fff4e9;
+      --bg: #f6f9ff;
+      --panel: #ffffff;
+      --border: #e2ebf8;
+      --text: #1b2b44;
+      --text-2: #42597a;
+      --muted: #7a8ba5;
+      --sidebar-w: 272px;
+      --toc-w: 232px;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(77, 143, 245, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--primary-700); }
+
+    /* ---------- topbar (mobile) ---------- */
+    .topbar {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: linear-gradient(90deg, var(--primary-700), var(--primary));
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .topbar button {
+      border: 0;
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+
+    /* ---------- layout ---------- */
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 22px 0 32px;
+      z-index: 30;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 22px 18px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #8ec0ff, var(--primary-700));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 6px 14px rgba(77, 143, 245, 0.35);
+    }
+    .brand-text strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.1;
+      background: linear-gradient(90deg, var(--primary-800), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .brand-text span { font-size: 12px; color: var(--muted); }
+    .brand-version {
+      margin-left: auto;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(90deg, var(--orange), #ffc062);
+      border-radius: 999px;
+    }
+
+    .nav-group { margin-top: 6px; }
+    .nav-group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .nav-group-title i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    .nav-link {
+      display: block;
+      margin: 1px 12px;
+      padding: 7px 12px 7px 24px;
+      color: var(--text-2);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-link:hover { background: var(--primary-50); color: var(--primary-800); }
+    .nav-link.active {
+      background: linear-gradient(90deg, var(--primary-100), var(--primary-50));
+      color: var(--primary-800);
+      font-weight: 600;
+      box-shadow: inset 3px 0 0 var(--primary);
+    }
+    .sidebar-foot {
+      margin: 22px 22px 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .sidebar-foot a { text-decoration: none; }
+
+    .main { flex: 1; min-width: 0; }
+
+    /* ---------- doc page ---------- */
+    .doc-wrap {
+      display: flex;
+      gap: 32px;
+      padding: 28px 40px 80px;
+    }
+    .doc-card {
+      flex: 1;
+      min-width: 0;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px 48px 48px;
+      box-shadow: var(--shadow);
+    }
+    .doc-breadcrumb {
+      margin: 18px 0 -6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .doc-breadcrumb b { color: var(--primary-700); font-weight: 600; }
+
+    .toc {
+      width: var(--toc-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: 28px;
+      align-self: flex-start;
+      max-height: calc(100vh - 56px);
+      overflow: auto;
+      font-size: 13px;
+    }
+    .toc-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin: 6px 0 10px;
+    }
+    .toc a {
+      display: block;
+      padding: 5px 10px;
+      color: var(--text-2);
+      text-decoration: none;
+      border-left: 2px solid var(--border);
+      line-height: 1.4;
+    }
+    .toc a.lv3 { padding-left: 22px; font-size: 12.5px; }
+    .toc a:hover { color: var(--primary-700); }
+    .toc a.active { color: var(--primary-700); border-left-color: var(--primary); font-weight: 600; }
+
+    .doc-pager {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .doc-pager a {
+      flex: 1;
+      max-width: 48%;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .doc-pager a:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+    .doc-pager small { display: block; color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+    .doc-pager .next { text-align: right; margin-left: auto; }
+
+    /* ---------- markdown ---------- */
+    .markdown-body { font-size: 15px; color: var(--text); }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 { scroll-margin-top: 24px; }
+    .markdown-body h1 {
+      margin: 28px 0 20px;
+      font-size: 32px;
+      letter-spacing: 0.01em;
+    }
+    .markdown-body h1::after {
+      content: "";
+      display: block;
+      width: 56px;
+      height: 4px;
+      margin-top: 14px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--orange));
+    }
+    .markdown-body h2 {
+      margin: 40px 0 14px;
+      padding-bottom: 10px;
+      font-size: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+    .markdown-body h3 { margin: 28px 0 10px; font-size: 17px; }
+    .markdown-body h4 { margin: 22px 0 8px; font-size: 15px; }
+    .markdown-body p, .markdown-body li { line-height: 1.8; color: var(--text-2); }
+    .markdown-body strong { color: var(--text); }
+    .markdown-body img {
+      display: block;
+      max-width: 100%;
+      margin: 20px 0 28px;
+      border-radius: 16px;
+      box-shadow: 0 14px 40px rgba(77, 143, 245, 0.14);
+    }
+    .markdown-body :not(pre) > code {
+      background: var(--primary-50);
+      color: var(--primary-800);
+      border: 1px solid var(--primary-100);
+      padding: 0.1em 0.42em;
+      border-radius: 6px;
+      font-size: 0.88em;
+    }
+    .markdown-body pre {
+      position: relative;
+      background: #1e2433;
+      color: #e6edf7;
+      padding: 18px 20px;
+      border-radius: 12px;
+      overflow: auto;
+      line-height: 1.6;
+      font-size: 13.5px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    }
+    .markdown-body pre code { background: none; padding: 0; font-family: "JetBrains Mono", Menlo, Consolas, monospace; }
+    .markdown-body pre code.hljs { padding: 0; background: transparent; }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: 0;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #cfe0ff;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .markdown-body pre:hover .copy-btn { opacity: 1; }
+    .code-lang {
+      position: absolute;
+      top: 10px;
+      right: 70px;
+      font-size: 11px;
+      color: #7c8db0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .markdown-body table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 18px 0;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .markdown-body th, .markdown-body td {
+      padding: 10px 14px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+    }
+    .markdown-body tr:last-child td { border-bottom: 0; }
+    .markdown-body th { background: var(--primary-50); color: var(--text); font-weight: 600; }
+    .markdown-body td { color: var(--text-2); }
+    .markdown-body tbody tr:hover td { background: #fafcff; }
+
+    .markdown-body blockquote {
+      margin: 18px 0;
+      padding: 12px 18px;
+      border-left: 4px solid var(--orange);
+      background: var(--orange-soft);
+      border-radius: 0 10px 10px 0;
+    }
+    .markdown-body blockquote p { margin: 0; color: #6b4a2b; }
+
+    .status { margin: 24px 40px; color: #b45309; }
+
+    /* ---------- home ---------- */
+    .home { overflow: hidden; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    .hero {
+      position: relative;
+      min-height: 620px;
+      padding: 96px 64px 120px;
+      color: #fff;
+      background: url("assets/hero.jpg") right center / cover no-repeat, linear-gradient(120deg, #8cbcff, var(--primary));
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(59, 123, 230, 0.55) 0%, rgba(104, 165, 252, 0.15) 55%, transparent 75%);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 120px;
+      background: linear-gradient(180deg, transparent, var(--bg));
+    }
+    .hero-inner { position: relative; z-index: 2; max-width: 720px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(8px);
+      font-size: 13px;
+    }
+    .hero-badge i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7dffb2;
+      box-shadow: 0 0 0 4px rgba(125, 255, 178, 0.25);
+      animation: pulse 1.8s infinite;
+    }
+    .hero h1 {
+      margin: 22px 0 0;
+      font-size: 84px;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      font-weight: 800;
+      text-shadow: 0 10px 40px rgba(30, 80, 170, 0.35);
+    }
+    .hero h1 span {
+      background: linear-gradient(90deg, #fff, #ffe2b8 60%, #ffb46b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-sub {
+      margin: 18px 0 0;
+      font-size: 26px;
+      font-weight: 700;
+      text-shadow: 0 4px 20px rgba(30, 80, 170, 0.3);
+    }
+    .hero-desc {
+      margin: 14px 0 0;
+      font-size: 17px;
+      line-height: 1.8;
+      opacity: 0.95;
+      max-width: 600px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: #fff; color: var(--primary-800); box-shadow: 0 10px 30px rgba(20, 60, 140, 0.25); }
+    .btn-orange { background: linear-gradient(90deg, var(--orange), #ffb35c); color: #fff; box-shadow: 0 10px 30px rgba(255, 140, 50, 0.35); }
+    .btn-ghost { background: rgba(255, 255, 255, 0.16); color: #fff; border: 1px solid rgba(255, 255, 255, 0.45); backdrop-filter: blur(8px); }
+    .hero-install {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 26px;
+      padding: 10px 12px 10px 18px;
+      border-radius: 12px;
+      background: rgba(20, 40, 80, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      font-family: Menlo, Consolas, monospace;
+      font-size: 14px;
+    }
+    .hero-install b { color: #ffd19c; font-weight: 400; }
+    .hero-install button {
+      border: 0;
+      border-radius: 8px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .orb { position: absolute; border-radius: 50%; filter: blur(2px); z-index: 1; animation: float 8s ease-in-out infinite; }
+    .orb.o1 { width: 14px; height: 14px; background: #ffb66b; left: 52%; top: 22%; box-shadow: 0 0 20px #ffb66b; }
+    .orb.o2 { width: 10px; height: 10px; background: #fff; left: 46%; top: 70%; animation-delay: -2s; box-shadow: 0 0 16px #fff; }
+    .orb.o3 { width: 18px; height: 18px; background: #bfe0ff; left: 60%; top: 82%; animation-delay: -4s; box-shadow: 0 0 22px #bfe0ff; }
+
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 4px rgba(125, 255, 178, 0.25); } 50% { box-shadow: 0 0 0 8px rgba(125, 255, 178, 0.05); } }
+    @keyframes shimmer { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
+
+    .section { padding: 72px 64px; }
+    .section-head { text-align: center; max-width: 760px; margin: 0 auto 44px; }
+    .eyebrow {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--primary-100);
+      color: var(--primary-800);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .section-head h2 { margin: 14px 0 10px; font-size: 36px; letter-spacing: 0.01em; }
+    .section-head h2 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--primary-700), var(--primary), var(--orange), var(--primary-700));
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 6s linear infinite;
+    }
+    .section-head p { margin: 0; color: var(--text-2); font-size: 16px; line-height: 1.8; }
+
+    .stats {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin: -84px 64px 0;
+    }
+    .stat {
+      padding: 26px 24px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid #fff;
+      box-shadow: 0 18px 50px rgba(77, 143, 245, 0.16);
+    }
+    .stat b {
+      display: block;
+      font-size: 34px;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--primary-700), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .stat b small { font-size: 16px; }
+    .stat span { display: block; margin-top: 4px; color: var(--text-2); font-size: 14px; }
+
+    .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .feature {
+      position: relative;
+      padding: 28px 24px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      overflow: hidden;
+    }
+    .feature::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary-100), transparent 70%);
+      transition: transform 0.3s;
+    }
+    .feature:hover { transform: translateY(-6px); box-shadow: 0 20px 44px rgba(77, 143, 245, 0.16); border-color: var(--primary-200); }
+    .feature:hover::after { transform: scale(1.6); }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #8ec0ff, var(--primary-700));
+      box-shadow: 0 10px 20px rgba(77, 143, 245, 0.3);
+      margin-bottom: 18px;
+    }
+    .feature-icon.orange { background: linear-gradient(135deg, #ffc07d, #ff8a3d); box-shadow: 0 10px 20px rgba(255, 140, 60, 0.3); }
+    .feature-icon svg { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .feature h3 { margin: 0 0 8px; font-size: 17px; }
+    .feature p { margin: 0; color: var(--text-2); font-size: 14px; line-height: 1.7; }
+    .feature .more { display: inline-block; margin-top: 14px; color: var(--primary-700); font-size: 13px; font-weight: 600; }
+
+    .figure {
+      margin: 0 auto;
+      padding: 14px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 60px rgba(77, 143, 245, 0.14);
+    }
+    .figure img { display: block; width: 100%; border-radius: 16px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .split.reverse .split-media { order: 2; }
+    .split-media {
+      position: relative;
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: 0 30px 70px rgba(77, 143, 245, 0.22);
+    }
+    .split-media img { display: block; width: 100%; transition: transform 0.6s; }
+    .split-media:hover img { transform: scale(1.04); }
+    .split-text h2 { margin: 14px 0 12px; font-size: 32px; }
+    .split-text p { color: var(--text-2); line-height: 1.85; font-size: 15.5px; }
+    .check { list-style: none; padding: 0; margin: 18px 0 0; }
+    .check li { position: relative; padding-left: 30px; margin: 10px 0; color: var(--text); font-size: 15px; }
+    .check li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / 12px no-repeat;
+    }
+    .mini-code {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: #1e2433;
+      color: #e6edf7;
+      font-family: Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; counter-reset: step; }
+    .step-card {
+      position: relative;
+      padding: 30px 26px 24px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+    .step-card::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      top: -18px;
+      left: 24px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+      background: linear-gradient(135deg, #8ec0ff, var(--primary-700));
+      box-shadow: 0 10px 20px rgba(77, 143, 245, 0.35);
+    }
+    .step-card h3 { margin: 8px 0 6px; font-size: 17px; }
+    .step-card p { margin: 0 0 12px; color: var(--text-2); font-size: 14px; }
+    .step-card pre {
+      margin: 0;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #1e2433;
+      color: #e6edf7;
+      font-size: 12.5px;
+      line-height: 1.6;
+      overflow: auto;
+    }
+
+    .stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .stack span {
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      font-weight: 600;
+      color: var(--text-2);
+      font-size: 14px;
+      box-shadow: 0 6px 16px rgba(77, 143, 245, 0.06);
+    }
+    .stack span b { color: var(--primary-700); }
+
+    .cta {
+      margin: 0 64px 72px;
+      padding: 56px;
+      border-radius: 28px;
+      text-align: center;
+      color: #fff;
+      background:
+        radial-gradient(400px 200px at 10% 0%, rgba(255, 180, 107, 0.45), transparent 70%),
+        radial-gradient(500px 260px at 100% 100%, rgba(255, 255, 255, 0.25), transparent 70%),
+        linear-gradient(120deg, var(--primary-700), var(--primary));
+      box-shadow: 0 30px 70px rgba(77, 143, 245, 0.3);
+    }
+    .cta h2 { margin: 0 0 12px; font-size: 32px; }
+    .cta p { margin: 0 0 28px; opacity: 0.92; }
+    .cta .hero-actions { justify-content: center; }
+
+    .backdrop { display: none; }
+
+    @media (max-width: 1360px) {
+      .toc { display: none; }
+      .features { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 1100px) {
+      .split { grid-template-columns: 1fr; }
+      .split.reverse .split-media { order: 0; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; gap: 34px; }
+    }
+    @media (max-width: 860px) {
+      .topbar { display: flex; }
+      .sidebar {
+        position: fixed;
+        transform: translateX(-105%);
+        transition: transform 0.2s ease;
+        box-shadow: 8px 0 24px rgba(20, 50, 85, 0.12);
+      }
+      body.nav-open .sidebar { transform: none; }
+      body.nav-open .backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(16, 42, 72, 0.35);
+        z-index: 25;
+      }
+      .doc-wrap { padding: 16px 12px 40px; }
+      .doc-card { padding: 4px 18px 28px; }
+      .hero { padding: 56px 22px 110px; min-height: 0; background-position: 70% center; }
+      .hero h1 { font-size: 56px; }
+      .hero-sub { font-size: 20px; }
+      .section { padding: 56px 18px; }
+      .stats { margin: -70px 18px 0; }
+      .features { grid-template-columns: 1fr; }
+      .cta { margin: 0 18px 48px; padding: 36px 22px; }
+      .doc-pager { flex-direction: column; }
+      .doc-pager a { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <button type="button" id="menu-btn">菜单</button>
+    <strong>Elpis</strong>
+  </header>
+  <div class="backdrop" id="backdrop"></div>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="main" id="main"></main>
+  </div>
+  <script>
+    const HOME = 'index.md';
+    const REPO = 'https://github.com/fsiaonma/elpis';
+    const DOC_SECTIONS = [
+      {
+        label: '开始',
+        items: [
+          { path: 'index.md', label: '介绍' },
+          { path: 'guide/quick-start.md', label: '快速开始' },
+          { path: 'guide/structure.md', label: '项目结构与扫描约定' },
+          { path: 'guide/config.md', label: '配置' },
+          { path: 'guide/dev-deploy.md', label: '开发与部署' },
+        ],
+      },
+      {
+        label: '服务端',
+        items: [
+          { path: 'server/pipeline.md', label: '请求链路与错误码' },
+          { path: 'server/controller.md', label: 'Module 与 Controller' },
+          { path: 'server/service.md', label: 'Service 与 Provider' },
+          { path: 'server/dto.md', label: 'DTO 与参数校验' },
+          { path: 'server/auth.md', label: '鉴权与 Guard' },
+          { path: 'server/builtin-api.md', label: '内置接口' },
+        ],
+      },
+      {
+        label: '前端',
+        items: [
+          { path: 'frontend/entry.md', label: '页面入口与 boot' },
+          { path: 'frontend/model.md', label: 'model 与 project' },
+          { path: 'frontend/menu.md', label: '菜单与视图类型' },
+          { path: 'frontend/schema-view.md', label: 'schema-view' },
+          { path: 'frontend/schema-table.md', label: 'schema-table' },
+          { path: 'frontend/schema-search-bar.md', label: 'schema-search-bar' },
+          { path: 'frontend/schema-form.md', label: 'schema-form' },
+          { path: 'frontend/components.md', label: '动态组件' },
+          { path: 'frontend/curl.md', label: '$curl 请求' },
+          { path: 'frontend/extension.md', label: '扩展点总览' },
+        ],
+      },
+      {
+        label: 'AI Agent',
+        items: [
+          { path: 'ai/overview.md', label: '总览' },
+          { path: 'ai/llm.md', label: 'LLM 接入' },
+          { path: 'ai/agent.md', label: 'Agent' },
+          { path: 'ai/skill.md', label: 'Skill' },
+          { path: 'ai/tool.md', label: 'Tool' },
+          { path: 'ai/mcp.md', label: 'MCP 接入' },
+          { path: 'ai/rag.md', label: 'RAG 知识库' },
+          { path: 'ai/memory.md', label: '记忆与多轮' },
+          { path: 'ai/multi-agent.md', label: '多 Agent 协作' },
+          { path: 'ai/guardrail.md', label: 'Guardrail' },
+          { path: 'ai/trace-eval.md', label: 'Trace 与 Eval' },
+          { path: 'ai/api.md', label: 'HTTP 与流式接口' },
+        ],
+      },
+    ];
+    const FLAT_DOCS = DOC_SECTIONS.flatMap((s) => s.items.map((i) => ({ ...i, section: s.label })));
+
+    const sidebarEl = document.getElementById('sidebar');
+    const mainEl = document.getElementById('main');
+    let currentDocPath = '';
+    let tocObserver = null;
+
+    marked.setOptions({ gfm: true, breaks: false });
+
+    function slugify(text) {
+      return text.trim().toLowerCase()
+        .replace(/<[^>]+>/g, '')
+        .replace(/[\s]+/g, '-')
+        .replace(/[^\w\u4e00-\u9fa5$-]/g, '');
+    }
+
+    function renderSidebar() {
+      const version = window.ELPIS_VERSION ? `v${window.ELPIS_VERSION}` : '';
+      const groups = DOC_SECTIONS.map((section) => {
+        const links = section.items.map((item) =>
+          `<a class="nav-link" href="#${encodeURIComponent(item.path)}" data-path="${item.path}">${item.label}</a>`
+        ).join('');
+        return `<div class="nav-group"><div class="nav-group-title"><i></i>${section.label}</div>${links}</div>`;
+      }).join('');
+
+      sidebarEl.innerHTML = `
+        <a class="brand" href="#${HOME}" data-path="${HOME}">
+          <div class="brand-logo">E</div>
+          <div class="brand-text"><strong>Elpis</strong><span>企业级全栈应用框架</span></div>
+          ${version ? `<span class="brand-version">${version}</span>` : ''}
+        </a>
+        ${groups}
+        <div class="sidebar-foot"><a href="${REPO}" target="_blank" rel="noopener">GitHub 仓库 ↗</a></div>
+      `;
+    }
+
+    const ICONS = {
+      server: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg>',
+      table: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg>',
+      layers: '<svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>',
+      bot: '<svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9 17h6"/></svg>',
+      plug: '<svg viewBox="0 0 24 24"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 01-12 0V8zM12 18v4"/></svg>',
+      book: '<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2V5z"/><path d="M8 7h7M8 11h5"/></svg>',
+      shield: '<svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>',
+      chart: '<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+    };
+
+    function renderHome() {
+      const features = [
+        { icon: 'server', title: '约定式 Nest 服务端', desc: '*.module.ts 自动加载，内置签名、参数校验、统一异常与多项目隔离。', link: 'server/controller.md' },
+        { icon: 'table', title: 'Schema 驱动中后台', desc: '一份 schemaConfig 生成搜索栏、分页表格、新增 / 编辑 / 详情抽屉。', link: 'frontend/schema-view.md' },
+        { icon: 'layers', title: '多项目继承', desc: 'model 定义模板，project 按 key 覆盖与追加，一套代码服务多条业务线。', link: 'frontend/model.md' },
+        { icon: 'bot', title: 'Agent 运行时', desc: '基于 LangGraph 的 plan → execute → observe 循环，并行工具调用。', link: 'ai/overview.md', orange: true },
+        { icon: 'plug', title: 'MCP · Skill · Tool', desc: '本地函数、Nest 服务、Python / Java / Go MCP Server 统一成工具。', link: 'ai/mcp.md', orange: true },
+        { icon: 'book', title: 'RAG 与记忆', desc: '可插拔 Chunker、Embedding、file / Qdrant 向量库，threadId 多轮记忆。', link: 'ai/rag.md', orange: true },
+        { icon: 'shield', title: 'Guardrail 安全', desc: '关键词与正则拦截，同时作用于用户输入与子 Agent 委派。', link: 'ai/guardrail.md' },
+        { icon: 'chart', title: 'Trace 与 Eval', desc: '每一步可回放，配合用例断言做 prompt 与模型的回归评测。', link: 'ai/trace-eval.md' },
+      ];
+
+      const featureHtml = features.map((f) => `
+        <a class="feature reveal" href="#${f.link}">
+          <div class="feature-icon ${f.orange ? 'orange' : ''}">${ICONS[f.icon]}</div>
+          <h3>${f.title}</h3>
+          <p>${f.desc}</p>
+          <span class="more">了解更多 →</span>
+        </a>`).join('');
+
+      mainEl.innerHTML = `
+        <div class="home">
+          <section class="hero">
+            <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+            <div class="hero-inner">
+              <span class="hero-badge"><i></i>v${window.ELPIS_VERSION || ''} · NestJS 12 · Vue 3 · LangGraph</span>
+              <h1><span>Elpis</span></h1>
+              <p class="hero-sub">中后台 + AI Agent 的企业级全栈框架</p>
+              <p class="hero-desc">业务仓库只写模块、配置和 Agent，启动、扫描、构建、鉴权、页面渲染与 Agent 编排全部交给框架。</p>
+              <div class="hero-actions">
+                <a class="btn btn-primary" href="#guide/quick-start.md">快速开始 →</a>
+                <a class="btn btn-orange" href="#ai/overview.md">AI Agent</a>
+                <a class="btn btn-ghost" href="${REPO}" target="_blank" rel="noopener">GitHub</a>
+              </div>
+              <div class="hero-install"><span><b>$</b> npm install @fsiaonma/elpis</span><button type="button" data-copy="npm install @fsiaonma/elpis">复制</button></div>
+            </div>
+          </section>
+
+          <div class="stats">
+            <div class="stat reveal"><b>0 <small>行</small></b><span>注册代码，约定目录自动扫描</span></div>
+            <div class="stat reveal"><b>1 <small>份</small></b><span>schemaConfig 生成完整 CRUD 页面</span></div>
+            <div class="stat reveal"><b>7 <small>类</small></b><span>Agent Step 全链路可观测</span></div>
+            <div class="stat reveal"><b>∞</b><span>MCP 工具，任意语言接入</span></div>
+          </div>
+
+          <section class="section">
+            <div class="section-head reveal">
+              <span class="eyebrow">FEATURES</span>
+              <h2>一套框架，<em>覆盖从页面到智能体</em></h2>
+              <p>服务端、前端、AI 三层能力开箱即用，每一层都留好了扩展点。</p>
+            </div>
+            <div class="features">${featureHtml}</div>
+          </section>
+
+          <section class="section" style="padding-top:24px">
+            <div class="section-head reveal">
+              <span class="eyebrow">ARCHITECTURE</span>
+              <h2>清晰的<em>三层架构</em></h2>
+              <p>业务仓库按约定组织代码，框架提供运行时、通用组件与 AI 能力，基础设施按需接入。</p>
+            </div>
+            <div class="figure reveal"><img src="assets/architecture.svg" alt="Elpis 架构" /></div>
+          </section>
+
+          <section class="section">
+            <div class="split">
+              <div class="split-media reveal"><img src="assets/schema-ui.jpg" alt="schema 到页面" /></div>
+              <div class="split-text reveal">
+                <span class="eyebrow">SCHEMA DRIVEN</span>
+                <h2>写配置，而不是写页面</h2>
+                <p>字段用标准 JSON Schema 描述，再用 <code>tableOption</code>、<code>searchOption</code>、<code>createFormOption</code> 声明它出现在哪里。表格、搜索、表单、详情全部自动生成，Ajv 校验同步生效。</p>
+                <ul class="check">
+                  <li>内置 input / select / dynamicSelect / dateRange 等控件</li>
+                  <li>自定义表单控件、搜索控件、动态组件只需一个配置文件</li>
+                  <li>project 继承 model，多业务线差异化配置</li>
+                </ul>
+                <div class="mini-code">product_name: {
+  type: 'string', label: '商品名称', maxLength: 10,
+  tableOption: { width: 200 },
+  searchOption: { comType: 'dynamicSelect', api: '/api/proj/product_enum/list' },
+  createFormOption: { comType: 'input' },
+}</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="split reverse">
+              <div class="split-media reveal"><img src="assets/ai-agent.jpg" alt="AI Agent" /></div>
+              <div class="split-text reveal">
+                <span class="eyebrow">AI NATIVE</span>
+                <h2>Agent 就是一个配置文件</h2>
+                <p>声明 prompt、可用的 Skill 和 Tool，框架负责调用模型、执行工具、回填结果、记录 Trace。MCP Server 启动即注册，invoke_agent 让多个 Agent 组队协作。</p>
+                <ul class="check">
+                  <li>OpenAI 兼容模型一行配置，自定义 Provider 随意扩展</li>
+                  <li>同步与 SSE 流式接口，步骤实时推送</li>
+                  <li>Guardrail、线程记忆、Eval 回归一应俱全</li>
+                </ul>
+                <div class="mini-code">export default {
+  name: 'project-assistant',
+  skills: ['project-query'],
+  tools: ['retrieve', 'list_directory', 'invoke_agent'],
+  prompt: '你是项目助手，先查询真实数据再回答。',
+} satisfies AgentDefinition;</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" style="padding-top:24px">
+            <div class="section-head reveal">
+              <span class="eyebrow">AGENT LOOP</span>
+              <h2>看得见的<em>Agent 运行循环</em></h2>
+              <p>每一次 plan、工具调用、观察与委派都会成为一个 Step，写入 Trace 并通过 SSE 实时推送到前端。</p>
+            </div>
+            <div class="figure reveal"><img src="assets/agent-loop.svg" alt="Agent 运行循环" /></div>
+          </section>
+
+          <section class="section">
+            <div class="section-head reveal">
+              <span class="eyebrow">GET STARTED</span>
+              <h2>三步<em>跑起来</em></h2>
+            </div>
+            <div class="steps">
+              <div class="step-card reveal">
+                <h3>安装框架</h3>
+                <p>在业务仓库中安装，或 npm link 联调源码。</p>
+                <pre>npm install @fsiaonma/elpis</pre>
+              </div>
+              <div class="step-card reveal">
+                <h3>写入口与模块</h3>
+                <p>server.js 启动服务，modules 下写 Nest 模块。</p>
+                <pre>serverStart({
+  name: 'MyApp',
+  homePage: '/view/project-list',
+});</pre>
+              </div>
+              <div class="step-card reveal">
+                <h3>启动开发</h3>
+                <p>前端 Vite HMR，服务端 tsc + nodemon。</p>
+                <pre>npm run build:dev
+npm run dev</pre>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" style="padding-top:8px">
+            <div class="section-head reveal">
+              <span class="eyebrow">TECH STACK</span>
+              <h2>站在成熟生态之上</h2>
+            </div>
+            <div class="stack reveal">
+              <span><b>NestJS</b> 12</span><span><b>Express</b></span><span><b>class-validator</b></span><span><b>knex</b></span>
+              <span><b>Vue</b> 3</span><span><b>Vite</b></span><span><b>Element Plus</b></span><span><b>Pinia</b></span><span><b>Ajv</b></span>
+              <span><b>LangGraph</b></span><span><b>LangChain</b></span><span><b>MCP</b></span><span><b>Qdrant</b></span><span><b>log4js</b></span>
+            </div>
+          </section>
+
+          <section class="cta reveal">
+            <h2>现在就开始构建你的应用</h2>
+            <p>从一个接口、一个页面、一个 Agent 开始。</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#guide/quick-start.md">阅读快速开始 →</a>
+              <a class="btn btn-ghost" href="#guide/structure.md">了解项目结构</a>
+            </div>
+          </section>
+        </div>
+      `;
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      mainEl.querySelectorAll('.reveal').forEach((el, i) => {
+        el.style.transitionDelay = `${(i % 4) * 70}ms`;
+        io.observe(el);
+      });
+    }
+
+    function enhanceMarkdown(container) {
+      const used = new Map();
+      container.querySelectorAll('h1, h2, h3').forEach((h) => {
+        let id = slugify(h.textContent);
+        const n = used.get(id) || 0;
+        used.set(id, n + 1);
+        if (n) id = `${id}-${n}`;
+        h.id = id;
+      });
+
+      container.querySelectorAll('pre > code').forEach((code) => {
+        const pre = code.parentElement;
+        const lang = (code.className.match(/language-(\w+)/) || [])[1];
+        const hlLang = lang === 'vue' ? 'xml' : lang;
+        if (window.hljs && hlLang && hlLang !== 'text' && hljs.getLanguage(hlLang)) {
+          code.innerHTML = hljs.highlight(code.textContent, { language: hlLang }).value;
+          code.classList.add('hljs');
+        }
+        if (lang && lang !== 'text') {
+          const tag = document.createElement('span');
+          tag.className = 'code-lang';
+          tag.textContent = lang;
+          pre.appendChild(tag);
+        }
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.type = 'button';
+        btn.textContent = '复制';
+        btn.dataset.copy = code.textContent;
+        pre.appendChild(btn);
+      });
+
+      container.querySelectorAll('a[href^="http"]').forEach((a) => {
+        a.target = '_blank';
+        a.rel = 'noopener';
+      });
+    }
+
+    function renderToc(container, tocEl) {
+      const heads = [...container.querySelectorAll('h2, h3')];
+      if (heads.length < 2) {
+        tocEl.style.display = 'none';
+        return;
+      }
+      tocEl.innerHTML = `<div class="toc-title">本页目录</div>` + heads.map((h) =>
+        `<a href="#" data-anchor="${h.id}" class="${h.tagName === 'H3' ? 'lv3' : ''}">${h.textContent}</a>`
+      ).join('');
+
+      if (tocObserver) tocObserver.disconnect();
+      const links = new Map([...tocEl.querySelectorAll('a')].map((a) => [a.dataset.anchor, a]));
+      tocObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            links.forEach((a) => a.classList.remove('active'));
+            links.get(entry.target.id)?.classList.add('active');
+          }
+        });
+      }, { rootMargin: '0px 0px -70% 0px' });
+      heads.forEach((h) => tocObserver.observe(h));
+    }
+
+    function renderPager(path) {
+      const idx = FLAT_DOCS.findIndex((d) => d.path === path);
+      if (idx < 0) return '';
+      const prev = FLAT_DOCS[idx - 1];
+      const next = FLAT_DOCS[idx + 1];
+      return `<nav class="doc-pager">
+        ${prev ? `<a class="prev" href="#${prev.path}"><small>← 上一篇</small>${prev.label}</a>` : '<span></span>'}
+        ${next ? `<a class="next" href="#${next.path}"><small>下一篇 →</small>${next.label}</a>` : ''}
+      </nav>`;
+    }
+
+    function resolveDocHref(fromPath, href) {
+      if (!href || /^(https?:|mailto:|tel:)/.test(href)) return null;
+      let pathPart = '';
+      let anchor = null;
+
+      if (href.startsWith('#')) {
+        const body = decodeURIComponent(href.slice(1));
+        const mdIdx = body.indexOf('.md');
+        if (mdIdx < 0) return null;
+        pathPart = body.slice(0, mdIdx + 3);
+        const after = body.slice(mdIdx + 3);
+        if (after.startsWith('#')) anchor = after.slice(1);
+      } else {
+        const hashIdx = href.indexOf('#');
+        pathPart = hashIdx >= 0 ? href.slice(0, hashIdx).split('?')[0] : href.split('?')[0];
+        if (hashIdx >= 0) anchor = href.slice(hashIdx + 1);
+      }
+
+      if (!pathPart.endsWith('.md')) return null;
+
+      let path = pathPart;
+      if (!href.startsWith('#') || pathPart.includes('..')) {
+        const fromDir = fromPath.includes('/') ? fromPath.slice(0, fromPath.lastIndexOf('/')) : '';
+        const parts = fromDir ? fromDir.split('/') : [];
+        for (const segment of pathPart.split('/')) {
+          if (!segment || segment === '.') continue;
+          if (segment === '..') parts.pop();
+          else parts.push(segment);
+        }
+        path = parts.join('/');
+      }
+
+      if (!window.DOCS_BUNDLE?.[path]) return null;
+      return { path, anchor };
+    }
+
+    function scrollToAnchor(anchor) {
+      if (!anchor) {
+        window.scrollTo(0, 0);
+        return;
+      }
+      requestAnimationFrame(() => {
+        const el = document.getElementById(anchor);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    function closeNav() {
+      document.body.classList.remove('nav-open');
+    }
+
+    function loadDoc(path, anchor) {
+      currentDocPath = path;
+      document.querySelectorAll('.nav-link').forEach((link) => {
+        link.classList.toggle('active', link.dataset.path === path);
+      });
+
+      if (path === HOME) {
+        renderHome();
+        document.title = 'Elpis · 企业级全栈应用框架';
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      const bundle = window.DOCS_BUNDLE;
+      if (!bundle || bundle[path] == null) {
+        mainEl.innerHTML = `<div class="status">文档未找到或未打包。在仓库根目录执行 <code>npm run docs:build</code></div>`;
+        return;
+      }
+
+      const meta = FLAT_DOCS.find((d) => d.path === path);
+      mainEl.innerHTML = `
+        <div class="doc-wrap">
+          <article class="doc-card">
+            ${meta ? `<div class="doc-breadcrumb">${meta.section} / <b>${meta.label}</b></div>` : ''}
+            <div class="markdown-body" id="md"></div>
+            ${renderPager(path)}
+          </article>
+          <aside class="toc" id="toc"></aside>
+        </div>`;
+
+      const md = document.getElementById('md');
+      md.innerHTML = marked.parse(bundle[path]);
+      enhanceMarkdown(md);
+      renderToc(md, document.getElementById('toc'));
+      document.title = `${meta?.label ?? path} · Elpis`;
+      scrollToAnchor(anchor);
+    }
+
+    function handleRoute() {
+      const raw = decodeURIComponent(location.hash.replace(/^#/, ''));
+      const mdIdx = raw.indexOf('.md');
+      if (!raw || mdIdx < 0) {
+        loadDoc(HOME);
+        return;
+      }
+      const path = raw.slice(0, mdIdx + 3);
+      const rest = raw.slice(mdIdx + 3);
+      loadDoc(path, rest.startsWith('#') ? rest.slice(1) : null);
+    }
+
+    async function copyText(btn) {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy);
+        const old = btn.textContent;
+        btn.textContent = '已复制';
+        setTimeout(() => { btn.textContent = old; }, 1200);
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    mainEl.addEventListener('click', (event) => {
+      const copyBtn = event.target.closest('[data-copy]');
+      if (copyBtn) {
+        copyText(copyBtn);
+        return;
+      }
+
+      const tocLink = event.target.closest('.toc a');
+      if (tocLink) {
+        event.preventDefault();
+        document.getElementById(tocLink.dataset.anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      const link = event.target.closest('a');
+      if (!link) return;
+      const parsed = resolveDocHref(currentDocPath, link.getAttribute('href'));
+      if (!parsed) return;
+      event.preventDefault();
+      location.hash = parsed.anchor ? `${parsed.path}#${parsed.anchor}` : parsed.path;
+    });
+
+    sidebarEl.addEventListener('click', (event) => {
+      const link = event.target.closest('[data-path]');
+      if (!link) return;
+      event.preventDefault();
+      location.hash = link.dataset.path;
+      closeNav();
+    });
+
+    document.getElementById('menu-btn').addEventListener('click', () => {
+      document.body.classList.toggle('nav-open');
+    });
+    document.getElementById('backdrop').addEventListener('click', closeNav);
+    window.addEventListener('hashchange', handleRoute);
+
+    renderSidebar();
+    handleRoute();
+  </script>
+</body>
+</html>

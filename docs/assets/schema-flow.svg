@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="hd" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#68a5fc"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#3b82f0" flood-opacity="0.15"/></filter>
+  </defs>
+  <rect width="1200" height="520" rx="24" fill="url(#bg)"/>
+  <text x="40" y="48" font-size="20" font-weight="700" fill="#1e5fc4">一份 schemaConfig → 一个完整的增删改查页面</text>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="76" width="380" height="410" rx="16" fill="#14284a"/>
+  </g>
+  <circle cx="64" cy="98" r="6" fill="#ff6b6b"/><circle cx="84" cy="98" r="6" fill="#ffd166"/><circle cx="104" cy="98" r="6" fill="#06d6a0"/>
+  <text x="130" y="103" font-size="12" fill="#8fb4e8">model/business/model.js</text>
+  <g font-family="Menlo,Consolas,monospace" font-size="13" fill="#d8e8ff">
+    <text x="60" y="140"><tspan fill="#ff9a62">schemaConfig</tspan>: {</text>
+    <text x="76" y="164"><tspan fill="#7fd1ff">api</tspan>: <tspan fill="#a5e075">'/api/proj/product'</tspan>,</text>
+    <text x="76" y="188"><tspan fill="#7fd1ff">schema</tspan>: { properties: {</text>
+    <text x="92" y="212">product_name: {</text>
+    <text x="108" y="236"><tspan fill="#ffd166">tableOption</tspan>: {...},</text>
+    <text x="108" y="260"><tspan fill="#ffd166">searchOption</tspan>: {...},</text>
+    <text x="108" y="284"><tspan fill="#ffd166">createFormOption</tspan>: {...},</text>
+    <text x="108" y="308"><tspan fill="#ffd166">editFormOption</tspan>: {...},</text>
+    <text x="108" y="332"><tspan fill="#ffd166">detailPanelOption</tspan>: {...}</text>
+    <text x="92" y="356">} } },</text>
+    <text x="76" y="380"><tspan fill="#7fd1ff">tableConfig</tspan>: { headerButtons, rowButtons },</text>
+    <text x="76" y="404"><tspan fill="#7fd1ff">searchConfig</tspan>: {},</text>
+    <text x="76" y="428"><tspan fill="#7fd1ff">componentConfig</tspan>: { createForm, ... }</text>
+    <text x="60" y="452">}</text>
+  </g>
+
+  <path d="M428 280 L488 280" stroke="#3b82f0" stroke-width="3" marker-end="url(#arr)"/>
+  <text x="458" y="266" font-size="12" fill="#1e5fc4" text-anchor="middle">schema-view</text>
+
+  <g filter="url(#sh)">
+    <rect x="496" y="76" width="420" height="410" rx="16" fill="#fff"/>
+  </g>
+  <rect x="496" y="76" width="420" height="40" rx="16" fill="url(#hd)"/>
+  <rect x="496" y="100" width="420" height="16" fill="url(#hd)"/>
+  <text x="516" y="102" font-size="13" fill="#fff" font-weight="600">商品管理</text>
+  <rect x="516" y="132" width="380" height="54" rx="10" fill="#f3f8ff" stroke="#d6e7ff"/>
+  <text x="530" y="164" font-size="12" fill="#5d7c99">商品名</text>
+  <rect x="572" y="148" width="100" height="24" rx="5" fill="#fff" stroke="#cfe0f7"/>
+  <text x="684" y="164" font-size="12" fill="#5d7c99">日期</text>
+  <rect x="712" y="148" width="100" height="24" rx="5" fill="#fff" stroke="#cfe0f7"/>
+  <rect x="824" y="148" width="58" height="24" rx="5" fill="#68a5fc"/>
+  <text x="853" y="164" font-size="12" fill="#fff" text-anchor="middle">搜索</text>
+  <rect x="516" y="198" width="72" height="24" rx="5" fill="#ff9a3c"/>
+  <text x="552" y="214" font-size="12" fill="#fff" text-anchor="middle">+ 新增</text>
+  <rect x="516" y="232" width="380" height="30" fill="#eef5ff"/>
+  <g font-size="12" fill="#24456e">
+    <text x="530" y="252">ID</text><text x="590" y="252">商品名</text><text x="700" y="252">价格</text><text x="800" y="252">操作</text>
+  </g>
+  <g font-size="12" fill="#5d7c99">
+    <line x1="516" y1="292" x2="896" y2="292" stroke="#eef2f7"/>
+    <text x="530" y="282">1</text><text x="590" y="282">《深入 Elpis》</text><text x="700" y="282">39.00</text>
+    <text x="800" y="282" fill="#3b82f0">详情 修改 删除</text>
+    <line x1="516" y1="322" x2="896" y2="322" stroke="#eef2f7"/>
+    <text x="530" y="312">2</text><text x="590" y="312">《Agent 实战》</text><text x="700" y="312">59.00</text>
+    <text x="800" y="312" fill="#3b82f0">详情 修改 删除</text>
+    <line x1="516" y1="352" x2="896" y2="352" stroke="#eef2f7"/>
+    <text x="530" y="342">3</text><text x="590" y="342">《Vue3 进阶》</text><text x="700" y="342">49.00</text>
+    <text x="800" y="342" fill="#3b82f0">详情 修改 删除</text>
+  </g>
+  <g font-size="12" fill="#5d7c99" text-anchor="middle">
+    <rect x="744" y="370" width="24" height="24" rx="5" fill="#68a5fc"/><text x="756" y="386" fill="#fff">1</text>
+    <rect x="774" y="370" width="24" height="24" rx="5" fill="#f3f8ff"/><text x="786" y="386">2</text>
+    <rect x="804" y="370" width="24" height="24" rx="5" fill="#f3f8ff"/><text x="816" y="386">3</text>
+    <text x="860" y="386">共 3 条</text>
+  </g>
+  <rect x="760" y="404" width="136" height="70" rx="10" fill="#fff" stroke="#d6e7ff"/>
+  <text x="774" y="426" font-size="12" fill="#1e5fc4" font-weight="600">新增商品</text>
+  <rect x="774" y="436" width="108" height="14" rx="4" fill="#f3f8ff"/>
+  <rect x="834" y="456" width="48" height="12" rx="4" fill="#68a5fc"/>
+  <text x="516" y="440" font-size="11.5" fill="#5d7c99">搜索栏 ← searchOption</text>
+  <text x="516" y="458" font-size="11.5" fill="#5d7c99">表格 ← tableOption</text>
+  <text x="516" y="476" font-size="11.5" fill="#5d7c99">抽屉表单 ← createFormOption</text>
+
+  <path d="M924 280 L984 280" stroke="#3b82f0" stroke-width="3" marker-end="url(#arr)"/>
+  <text x="954" y="266" font-size="12" fill="#1e5fc4" text-anchor="middle">$curl</text>
+
+  <g filter="url(#sh)">
+    <rect x="992" y="76" width="168" height="410" rx="16" fill="#fff"/>
+  </g>
+  <text x="1076" y="110" font-size="15" font-weight="700" fill="#1e5fc4" text-anchor="middle">业务接口约定</text>
+  <g font-family="Menlo,Consolas,monospace" font-size="12" text-anchor="middle">
+    <rect x="1008" y="130" width="136" height="54" rx="10" fill="#eef5ff"/>
+    <text x="1076" y="152" fill="#1e5fc4" font-weight="700">GET</text>
+    <text x="1076" y="172" fill="#24456e">{api}/list</text>
+    <rect x="1008" y="194" width="136" height="54" rx="10" fill="#eef5ff"/>
+    <text x="1076" y="216" fill="#1e5fc4" font-weight="700">GET</text>
+    <text x="1076" y="236" fill="#24456e">{api}?id=</text>
+    <rect x="1008" y="258" width="136" height="54" rx="10" fill="#e9fbf3"/>
+    <text x="1076" y="280" fill="#15805a" font-weight="700">POST</text>
+    <text x="1076" y="300" fill="#24456e">{api}</text>
+    <rect x="1008" y="322" width="136" height="54" rx="10" fill="#fff4ea"/>
+    <text x="1076" y="344" fill="#c2410c" font-weight="700">PUT</text>
+    <text x="1076" y="364" fill="#24456e">{api}</text>
+    <rect x="1008" y="386" width="136" height="54" rx="10" fill="#ffecec"/>
+    <text x="1076" y="408" fill="#c53030" font-weight="700">DELETE</text>
+    <text x="1076" y="428" fill="#24456e">{api}</text>
+  </g>
+</svg>

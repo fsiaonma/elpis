@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="biz" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffb066"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="fw" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#68a5fc"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="infra" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5b6b86"/>
+      <stop offset="1" stop-color="#3d4a63"/>
+    </linearGradient>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#3b82f0" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#68a5fc"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="660" rx="24" fill="url(#bg)"/>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="36" width="1120" height="150" rx="18" fill="#fff"/>
+  </g>
+  <rect x="40" y="36" width="10" height="150" rx="5" fill="url(#biz)"/>
+  <text x="72" y="72" font-size="20" font-weight="700" fill="#c2410c">业务仓库 my-app</text>
+  <text x="72" y="96" font-size="13" fill="#9a6a45">只写业务：约定目录被框架自动扫描</text>
+  <g font-size="14" fill="#7c3d12">
+    <rect x="72" y="114" width="150" height="50" rx="10" fill="#fff4ea" stroke="#ffd4b0"/>
+    <text x="147" y="135" text-anchor="middle" font-weight="600">app/modules</text>
+    <text x="147" y="154" text-anchor="middle" font-size="12" fill="#b0724a">Nest 模块</text>
+    <rect x="236" y="114" width="150" height="50" rx="10" fill="#fff4ea" stroke="#ffd4b0"/>
+    <text x="311" y="135" text-anchor="middle" font-weight="600">app/pages</text>
+    <text x="311" y="154" text-anchor="middle" font-size="12" fill="#b0724a">页面 / 扩展组件</text>
+    <rect x="400" y="114" width="150" height="50" rx="10" fill="#fff4ea" stroke="#ffd4b0"/>
+    <text x="475" y="135" text-anchor="middle" font-weight="600">model/</text>
+    <text x="475" y="154" text-anchor="middle" font-size="12" fill="#b0724a">schema 配置</text>
+    <rect x="564" y="114" width="150" height="50" rx="10" fill="#fff4ea" stroke="#ffd4b0"/>
+    <text x="639" y="135" text-anchor="middle" font-weight="600">config/</text>
+    <text x="639" y="154" text-anchor="middle" font-size="12" fill="#b0724a">多环境配置</text>
+    <rect x="728" y="114" width="130" height="50" rx="10" fill="#fff4ea" stroke="#ffd4b0"/>
+    <text x="793" y="135" text-anchor="middle" font-weight="600">agents/</text>
+    <text x="793" y="154" text-anchor="middle" font-size="12" fill="#b0724a">Agent 定义</text>
+    <rect x="872" y="114" width="130" height="50" rx="10" fill="#fff4ea" stroke="#ffd4b0"/>
+    <text x="937" y="135" text-anchor="middle" font-weight="600">skills/</text>
+    <text x="937" y="154" text-anchor="middle" font-size="12" fill="#b0724a">技能函数</text>
+    <rect x="1016" y="114" width="120" height="50" rx="10" fill="#fff4ea" stroke="#ffd4b0"/>
+    <text x="1076" y="135" text-anchor="middle" font-weight="600">prompts/</text>
+    <text x="1076" y="154" text-anchor="middle" font-size="12" fill="#b0724a">提示词</text>
+  </g>
+
+  <path d="M600 192 L600 222" stroke="#68a5fc" stroke-width="3" marker-end="url(#arr)"/>
+  <text x="614" y="214" font-size="12" fill="#5d7c99">serverStart() / frontendBuild()</text>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="232" width="1120" height="250" rx="18" fill="#fff"/>
+  </g>
+  <rect x="40" y="232" width="10" height="250" rx="5" fill="url(#fw)"/>
+  <text x="72" y="268" font-size="20" font-weight="700" fill="#1e5fc4">Elpis 框架 @fsiaonma/elpis</text>
+  <text x="72" y="292" font-size="13" fill="#5d7c99">提供运行时、通用组件与 AI 能力</text>
+
+  <rect x="72" y="308" width="340" height="152" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <text x="92" y="336" font-size="16" font-weight="700" fill="#1e5fc4">服务端 · NestJS 12</text>
+  <g font-size="12.5" fill="#24456e">
+    <rect x="92" y="350" width="146" height="28" rx="7" fill="#fff"/><text x="165" y="369" text-anchor="middle">ValidationPipe</text>
+    <rect x="248" y="350" width="146" height="28" rx="7" fill="#fff"/><text x="321" y="369" text-anchor="middle">ApiSignGuard</text>
+    <rect x="92" y="386" width="146" height="28" rx="7" fill="#fff"/><text x="165" y="405" text-anchor="middle">ProjKeyInterceptor</text>
+    <rect x="248" y="386" width="146" height="28" rx="7" fill="#fff"/><text x="321" y="405" text-anchor="middle">ExceptionsFilter</text>
+    <rect x="92" y="422" width="146" height="28" rx="7" fill="#fff"/><text x="165" y="441" text-anchor="middle">Config / DB / Logger</text>
+    <rect x="248" y="422" width="146" height="28" rx="7" fill="#fff"/><text x="321" y="441" text-anchor="middle">Project / View API</text>
+  </g>
+
+  <rect x="430" y="308" width="340" height="152" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <text x="450" y="336" font-size="16" font-weight="700" fill="#1e5fc4">AI Runtime · LangGraph</text>
+  <g font-size="12.5" fill="#24456e">
+    <rect x="450" y="350" width="96" height="28" rx="7" fill="#fff"/><text x="498" y="369" text-anchor="middle">LLM</text>
+    <rect x="554" y="350" width="96" height="28" rx="7" fill="#fff"/><text x="602" y="369" text-anchor="middle">Agent</text>
+    <rect x="658" y="350" width="96" height="28" rx="7" fill="#fff"/><text x="706" y="369" text-anchor="middle">Skill</text>
+    <rect x="450" y="386" width="96" height="28" rx="7" fill="#fff"/><text x="498" y="405" text-anchor="middle">Tool</text>
+    <rect x="554" y="386" width="96" height="28" rx="7" fill="#fff"/><text x="602" y="405" text-anchor="middle">MCP</text>
+    <rect x="658" y="386" width="96" height="28" rx="7" fill="#fff"/><text x="706" y="405" text-anchor="middle">RAG</text>
+    <rect x="450" y="422" width="96" height="28" rx="7" fill="#fff"/><text x="498" y="441" text-anchor="middle">Memory</text>
+    <rect x="554" y="422" width="96" height="28" rx="7" fill="#fff"/><text x="602" y="441" text-anchor="middle">Guardrail</text>
+    <rect x="658" y="422" width="96" height="28" rx="7" fill="#fff"/><text x="706" y="441" text-anchor="middle">Trace/Eval</text>
+  </g>
+
+  <rect x="788" y="308" width="348" height="152" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <text x="808" y="336" font-size="16" font-weight="700" fill="#1e5fc4">前端 · Vite + Vue3</text>
+  <g font-size="12.5" fill="#24456e">
+    <rect x="808" y="350" width="150" height="28" rx="7" fill="#fff"/><text x="883" y="369" text-anchor="middle">boot / $curl</text>
+    <rect x="966" y="350" width="150" height="28" rx="7" fill="#fff"/><text x="1041" y="369" text-anchor="middle">dashboard 路由</text>
+    <rect x="808" y="386" width="150" height="28" rx="7" fill="#fff"/><text x="883" y="405" text-anchor="middle">schema-table</text>
+    <rect x="966" y="386" width="150" height="28" rx="7" fill="#fff"/><text x="1041" y="405" text-anchor="middle">schema-form</text>
+    <rect x="808" y="422" width="150" height="28" rx="7" fill="#fff"/><text x="883" y="441" text-anchor="middle">schema-search-bar</text>
+    <rect x="966" y="422" width="150" height="28" rx="7" fill="#fff"/><text x="1041" y="441" text-anchor="middle">Element Plus</text>
+  </g>
+
+  <path d="M600 488 L600 518" stroke="#68a5fc" stroke-width="3" marker-end="url(#arr)"/>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="528" width="1120" height="100" rx="18" fill="#fff"/>
+  </g>
+  <rect x="40" y="528" width="10" height="100" rx="5" fill="url(#infra)"/>
+  <text x="72" y="564" font-size="20" font-weight="700" fill="#33405a">基础设施</text>
+  <text x="72" y="588" font-size="13" fill="#6b7890">按需接入</text>
+  <g font-size="14" fill="#33405a" font-weight="600">
+    <rect x="250" y="550" width="130" height="56" rx="12" fill="#f2f4f8"/><text x="315" y="583" text-anchor="middle">MySQL · knex</text>
+    <rect x="396" y="550" width="150" height="56" rx="12" fill="#f2f4f8"/><text x="471" y="583" text-anchor="middle">OpenAI 兼容 LLM</text>
+    <rect x="562" y="550" width="130" height="56" rx="12" fill="#f2f4f8"/><text x="627" y="583" text-anchor="middle">Embedding</text>
+    <rect x="708" y="550" width="130" height="56" rx="12" fill="#f2f4f8"/><text x="773" y="583" text-anchor="middle">Qdrant</text>
+    <rect x="854" y="550" width="140" height="56" rx="12" fill="#f2f4f8"/><text x="924" y="583" text-anchor="middle">MCP Server</text>
+    <rect x="1010" y="550" width="126" height="56" rx="12" fill="#f2f4f8"/><text x="1073" y="583" text-anchor="middle">log4js</text>
+  </g>
+</svg>

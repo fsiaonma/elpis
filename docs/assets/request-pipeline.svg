@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e6f0ff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7fb4fd"/>
+      <stop offset="1" stop-color="#4f92f6"/>
+    </linearGradient>
+    <linearGradient id="biz" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb066"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#68a5fc"/>
+    </marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ef5b5b"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#3b82f0" flood-opacity="0.18"/></filter>
+  </defs>
+  <rect width="1200" height="380" rx="24" fill="url(#bg)"/>
+  <text x="40" y="48" font-size="20" font-weight="700" fill="#1e5fc4">一次 HTTP 请求在 Elpis 中的旅程</text>
+
+  <g font-size="14" fill="#fff" text-anchor="middle" font-weight="600">
+    <g filter="url(#sh)">
+      <rect x="40" y="96" width="120" height="76" rx="14" fill="#33405a"/>
+      <rect x="196" y="96" width="140" height="76" rx="14" fill="url(#node)"/>
+      <rect x="372" y="96" width="140" height="76" rx="14" fill="url(#biz)"/>
+      <rect x="548" y="96" width="150" height="76" rx="14" fill="url(#node)"/>
+      <rect x="734" y="96" width="140" height="76" rx="14" fill="url(#node)"/>
+      <rect x="910" y="96" width="120" height="76" rx="14" fill="url(#biz)"/>
+      <rect x="1060" y="96" width="100" height="76" rx="14" fill="url(#biz)"/>
+    </g>
+    <text x="100" y="130">请求</text>
+    <text x="100" y="152" font-size="11" font-weight="400" opacity=".85">/api/proj/...</text>
+    <text x="266" y="130">ApiSignGuard</text>
+    <text x="266" y="152" font-size="11" font-weight="400" opacity=".9">s_t + s_sign 校验</text>
+    <text x="442" y="130">业务 Guard</text>
+    <text x="442" y="152" font-size="11" font-weight="400" opacity=".9">APP_GUARD 鉴权</text>
+    <text x="623" y="130">ProjKeyInterceptor</text>
+    <text x="623" y="152" font-size="11" font-weight="400" opacity=".9">注入 req.projKey</text>
+    <text x="804" y="130">ValidationPipe</text>
+    <text x="804" y="152" font-size="11" font-weight="400" opacity=".9">DTO 校验 / 转换</text>
+    <text x="970" y="130">Controller</text>
+    <text x="970" y="152" font-size="11" font-weight="400" opacity=".9">BaseController</text>
+    <text x="1110" y="130">Service</text>
+    <text x="1110" y="152" font-size="11" font-weight="400" opacity=".9">knex / 逻辑</text>
+  </g>
+  <g stroke="#68a5fc" stroke-width="2.5" fill="none" marker-end="url(#arr)">
+    <path d="M162 134 L192 134"/>
+    <path d="M338 134 L368 134"/>
+    <path d="M514 134 L544 134"/>
+    <path d="M700 134 L730 134"/>
+    <path d="M876 134 L906 134"/>
+    <path d="M1032 134 L1056 134"/>
+  </g>
+
+  <g font-size="12.5" text-anchor="middle">
+    <path d="M266 176 L266 222" stroke="#ef5b5b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arr-r)"/>
+    <rect x="206" y="226" width="120" height="30" rx="15" fill="#ffecec"/>
+    <text x="266" y="246" fill="#c53030" font-weight="600">445 签名失败</text>
+    <path d="M442 176 L442 222" stroke="#ef5b5b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arr-r)"/>
+    <rect x="382" y="226" width="120" height="30" rx="15" fill="#ffecec"/>
+    <text x="442" y="246" fill="#c53030" font-weight="600">业务自定义错误</text>
+    <path d="M623 176 L623 222" stroke="#ef5b5b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arr-r)"/>
+    <rect x="558" y="226" width="130" height="30" rx="15" fill="#ffecec"/>
+    <text x="623" y="246" fill="#c53030" font-weight="600">446 缺少 proj_key</text>
+    <path d="M804 176 L804 222" stroke="#ef5b5b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arr-r)"/>
+    <rect x="739" y="226" width="130" height="30" rx="15" fill="#ffecec"/>
+    <text x="804" y="246" fill="#c53030" font-weight="600">442 参数校验失败</text>
+    <path d="M1040 176 L1040 222" stroke="#ef5b5b" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arr-r)"/>
+    <rect x="960" y="226" width="160" height="30" rx="15" fill="#ffecec"/>
+    <text x="1040" y="246" fill="#c53030" font-weight="600">50000 未捕获异常</text>
+  </g>
+
+  <rect x="40" y="290" width="1120" height="62" rx="14" fill="#fff"/>
+  <text x="64" y="318" font-size="14" font-weight="700" fill="#1e5fc4">统一响应</text>
+  <text x="64" y="340" font-size="13" fill="#24456e" font-family="Menlo,Consolas,monospace">成功 { success: true, data, metadata }     失败 { success: false, message, code }</text>
+  <text x="1136" y="330" font-size="12" fill="#5d7c99" text-anchor="end">前端 $curl 按 code 统一弹出提示</text>
+</svg>

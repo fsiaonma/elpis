@@ -1,7 +1,8 @@
 {
   "name": "@fsiaonma/elpis",
-  "version": "1.0.6",
-  "description": "",
+  "version": "2.0.0",
+  "description": "企业级全栈应用框架",
+  "homepage": "https://fsiaonma.github.io/elpis/",
   "main": "index.js",
   "exports": {
     ".": "./index.js",
@@ -23,7 +24,8 @@
     "build:watch": "nest build --watch",
     "prepublishOnly": "npm run build",
     "lint": "eslint --quiet --ext js,vue .",
-    "test": "_ENV='local' mocha 'test/**/*.js'"
+    "test": "_ENV='local' mocha 'test/**/*.js'",
+    "docs:build": "node docs/build.mjs"
   },
   "repository": {
     "type": "git",
