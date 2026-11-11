@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 470" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5fd3a5"/>
+      <stop offset="1" stop-color="#22a876"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#22a876"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#3b82f0" flood-opacity="0.16"/></filter>
+  </defs>
+  <rect width="600" height="470" rx="24" fill="url(#bg)"/>
+  <text x="28" y="42" font-size="18" font-weight="700" fill="#1e5fc4">多 Agent：Supervisor 调度 Worker</text>
+  <text x="28" y="64" font-size="12.5" fill="#5d7c99">内置工具 invoke_agent 把子任务委派给另一个 Agent</text>
+
+  <!-- top row -->
+  <g filter="url(#sh)">
+    <rect x="28" y="96" width="120" height="48" rx="14" fill="#33405a"/>
+    <rect x="180" y="88" width="240" height="64" rx="16" fill="url(#org)"/>
+    <rect x="452" y="96" width="120" height="48" rx="14" fill="url(#green)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle">
+    <text x="88" y="125" font-size="13.5" font-weight="700">用户输入</text>
+    <text x="300" y="115" font-size="15" font-weight="700">studio-supervisor</text>
+    <text x="300" y="136" font-size="10.5" font-family="Menlo,Consolas,monospace">tools: ['invoke_agent']</text>
+    <text x="504" y="125" font-size="13.5" font-weight="700">汇总输出</text>
+  </g>
+  <g font-size="12" font-weight="700" fill="#15805a" text-anchor="middle">
+    <circle cx="552" cy="120" r="10" fill="#fff"/><text x="552" y="124">3</text>
+  </g>
+  <path d="M151 120 L175 120" stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+  <path d="M423 120 L447 120" stroke="#22a876" stroke-width="2" fill="none" marker-end="url(#arr-g)"/>
+
+  <!-- delegation arrows -->
+  <g stroke="#3b82f0" stroke-width="2.5" fill="none" marker-end="url(#arr)">
+    <path d="M252 155 L172 234"/>
+    <path d="M348 155 L428 234"/>
+  </g>
+  <rect x="110" y="180" width="380" height="30" rx="15" fill="#fff" stroke="#ffd4b0"/>
+  <text x="300" y="200" font-size="12" font-weight="600" fill="#c2410c" text-anchor="middle">委派前检查：深度 ≤ 2 · 无环路 · Guardrail</text>
+
+  <!-- workers -->
+  <g filter="url(#sh)">
+    <rect x="28" y="240" width="256" height="96" rx="16" fill="url(#node)"/>
+    <rect x="316" y="240" width="256" height="96" rx="16" fill="url(#node)"/>
+  </g>
+  <g font-size="12" font-weight="700" fill="#1e5fc4" text-anchor="middle">
+    <circle cx="258" cy="262" r="11" fill="#fff"/><text x="258" y="266">1</text>
+    <circle cx="546" cy="262" r="11" fill="#fff"/><text x="546" y="266">2</text>
+  </g>
+  <g fill="#fff">
+    <text x="44" y="268" font-size="15" font-weight="700">profile-analyst</text>
+    <text x="44" y="288" font-size="12" opacity=".95">解析简历 · 生成画像</text>
+    <text x="332" y="268" font-size="15" font-weight="700">match-scorer</text>
+    <text x="332" y="288" font-size="12" opacity=".95">岗位匹配打分</text>
+  </g>
+  <g fill="#fff" fill-opacity=".22">
+    <rect x="44" y="300" width="98" height="24" rx="12"/>
+    <rect x="148" y="300" width="68" height="24" rx="12"/>
+    <rect x="222" y="300" width="50" height="24" rx="12"/>
+    <rect x="332" y="300" width="132" height="24" rx="12"/>
+    <rect x="470" y="300" width="88" height="24" rx="12"/>
+  </g>
+  <g font-size="10.5" fill="#fff" text-anchor="middle">
+    <text x="93" y="316" font-family="Menlo,Consolas,monospace">parse_resume</text>
+    <text x="182" y="316" font-family="Menlo,Consolas,monospace">retrieve</text>
+    <text x="247" y="316">+ Skill</text>
+    <text x="398" y="316">自己的 Skill / Tool</text>
+    <text x="514" y="316">独立 prompt</text>
+  </g>
+
+  <!-- observability -->
+  <g filter="url(#sh)">
+    <rect x="28" y="358" width="544" height="84" rx="14" fill="#fff"/>
+  </g>
+  <text x="44" y="382" font-size="13" font-weight="700" fill="#1e5fc4">委派全程可观测</text>
+  <text x="556" y="382" font-size="11" fill="#5d7c99" text-anchor="end">子 Agent 不读线程记忆，只接收委派输入</text>
+  <g font-size="12" font-weight="700" fill="#24456e">
+    <text x="44" y="406">delegation 步骤</text>
+    <text x="222" y="406">独立 Trace</text>
+    <text x="400" y="406">流式实时转发</text>
+  </g>
+  <g font-size="11" fill="#5d7c99">
+    <text x="44" y="425">父 steps 内嵌子 steps</text>
+    <text x="222" y="425" font-size="10.5" font-family="Menlo,Consolas,monospace">GET /trace/:childRunId</text>
+    <text x="400" y="425">带 agent · parentRunId</text>
+  </g>
+</svg>

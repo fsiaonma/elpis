@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <marker id="arr-o" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ff8a3d"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#3b82f0" flood-opacity="0.16"/></filter>
+  </defs>
+  <rect width="1200" height="500" rx="24" fill="url(#bg)"/>
+  <text x="40" y="48" font-size="20" font-weight="700" fill="#1e5fc4">打开一个中后台页面：从 URL 到可操作的 CRUD</text>
+  <text x="40" y="72" font-size="13" fill="#5d7c99">服务端只渲染一个模板，菜单、路由和视图类型全部来自 model + project 合并后的项目配置</text>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="104" width="200" height="80" rx="16" fill="#33405a"/>
+    <rect x="310" y="104" width="230" height="80" rx="16" fill="url(#node)"/>
+    <rect x="610" y="104" width="250" height="80" rx="16" fill="url(#node)"/>
+    <rect x="930" y="104" width="230" height="80" rx="16" fill="url(#org)"/>
+  </g>
+  <g text-anchor="middle" fill="#fff">
+    <text x="140" y="138" font-size="16" font-weight="700">浏览器</text>
+    <text x="140" y="162" font-size="11" fill="#cbd5e1" font-family="Menlo,Consolas,monospace">/view/dashboard?proj_key=jd</text>
+    <text x="425" y="138" font-size="16" font-weight="700">ViewController</text>
+    <text x="425" y="162" font-size="11.5" opacity=".92">nunjucks 渲染 entry.dashboard.tpl</text>
+    <text x="735" y="138" font-size="16" font-weight="700">boot()</text>
+    <text x="735" y="162" font-size="11.5" opacity=".92">Vue 3 · Element Plus · Pinia · Router</text>
+    <text x="1045" y="138" font-size="16" font-weight="700">GET /api/project</text>
+    <text x="1045" y="162" font-size="11.5" opacity=".95">model + project 合并后的配置</text>
+  </g>
+  <g stroke="#3b82f0" stroke-width="2.5" fill="none" marker-end="url(#arr)">
+    <path d="M244 144 L304 144"/>
+    <path d="M544 144 L604 144"/>
+    <path d="M864 144 L924 144"/>
+  </g>
+  <g font-size="11.5" fill="#1e5fc4" text-anchor="middle">
+    <text x="274" y="134">请求</text>
+    <text x="574" y="134">HTML</text>
+    <text x="894" y="134">$curl</text>
+  </g>
+  <g font-size="11.5" fill="#5d7c99" text-anchor="middle">
+    <text x="425" y="208">模板写入 window.projKey / env / options</text>
+    <text x="735" y="208">createApp → use(...) → mount('#root')</text>
+    <text x="1034" y="208">写入 menuStore / projectStore</text>
+  </g>
+  <path d="M1142 188 L1142 230" stroke="#ff8a3d" stroke-width="2.5" fill="none" marker-end="url(#arr-o)"/>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="236" width="1120" height="238" rx="18" fill="#fff"/>
+  </g>
+  <text x="64" y="270" font-size="16" font-weight="700" fill="#1e5fc4">dashboard：按 menu[].moduleType 分发视图</text>
+  <text x="1136" y="270" font-size="12" fill="#5d7c99" text-anchor="end">URL 用 key / sider_key 定位当前菜单</text>
+
+  <rect x="64" y="288" width="250" height="100" rx="14" fill="#fff4ea" stroke="#ffd4b0"/>
+  <rect x="338" y="288" width="250" height="100" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <rect x="612" y="288" width="250" height="100" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <rect x="886" y="288" width="250" height="100" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <g font-size="12" font-weight="700" fill="#fff" text-anchor="middle">
+    <rect x="80" y="302" width="74" height="24" rx="12" fill="url(#org)"/><text x="117" y="318">schema</text>
+    <rect x="354" y="302" width="74" height="24" rx="12" fill="url(#node)"/><text x="391" y="318">iframe</text>
+    <rect x="628" y="302" width="74" height="24" rx="12" fill="url(#node)"/><text x="665" y="318">custom</text>
+    <rect x="902" y="302" width="74" height="24" rx="12" fill="url(#node)"/><text x="939" y="318">sider</text>
+  </g>
+  <g font-size="11.5" fill="#24456e" font-family="Menlo,Consolas,monospace">
+    <text x="80" y="350">/view/dashboard/schema</text>
+    <text x="354" y="350">/view/dashboard/iframe</text>
+    <text x="628" y="350">/view/dashboard{path}</text>
+    <text x="902" y="350">/view/dashboard/sider</text>
+  </g>
+  <g font-size="12" fill="#5d7c99">
+    <text x="80" y="372" fill="#9a6a45">schemaConfig 生成完整 CRUD</text>
+    <text x="354" y="372">iframeConfig.path 内嵌外部页面</text>
+    <text x="628" y="372">router.js 注册的业务 Vue 页面</text>
+    <text x="902" y="372">siderConfig.menu 二级菜单，可嵌套</text>
+  </g>
+
+  <path d="M189 390 L189 406" stroke="#ff8a3d" stroke-width="2" fill="none" marker-end="url(#arr-o)"/>
+  <rect x="64" y="410" width="250" height="46" rx="12" fill="#fff" stroke="#ffd4b0"/>
+  <rect x="338" y="410" width="250" height="46" rx="12" fill="#fff" stroke="#cfe2ff"/>
+  <rect x="612" y="410" width="250" height="46" rx="12" fill="#fff" stroke="#cfe2ff"/>
+  <rect x="886" y="410" width="250" height="46" rx="12" fill="#fff" stroke="#cfe2ff"/>
+  <g font-size="13" font-weight="700" fill="#1e5fc4">
+    <text x="80" y="430" fill="#c2410c">schema-view</text>
+    <text x="354" y="430">$curl</text>
+    <text x="628" y="430">/api/proj/**</text>
+    <text x="902" y="430">业务 Controller</text>
+  </g>
+  <g font-size="11" fill="#5d7c99">
+    <text x="80" y="447">search-bar · table · form</text>
+    <text x="354" y="447">自动带 s_t · s_sign · proj_key</text>
+    <text x="628" y="447">ApiSignGuard · ProjKeyInterceptor</text>
+    <text x="902" y="447">列表 · 详情 · 新增 · 修改 · 删除</text>
+  </g>
+  <g stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M317 433 L333 433"/>
+    <path d="M591 433 L607 433"/>
+    <path d="M865 433 L881 433"/>
+  </g>
+</svg>

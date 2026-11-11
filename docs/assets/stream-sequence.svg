@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 470" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <marker id="arr-o" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ff8a3d"/>
+    </marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#22a876"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#3b82f0" flood-opacity="0.18"/></filter>
+  </defs>
+  <rect width="600" height="470" rx="24" fill="url(#bg)"/>
+  <text x="28" y="42" font-size="18" font-weight="700" fill="#1e5fc4">SSE 流式：每一步实时推到前端</text>
+  <text x="28" y="64" font-size="12.5" fill="#5d7c99">POST /api/ai/agent/run/stream，事件只有 step · delta · done 三种</text>
+
+  <!-- lifelines -->
+  <g stroke="#bcd7ff" stroke-width="1.5" stroke-dasharray="4 4">
+    <path d="M76 114 L76 430"/>
+    <path d="M222 114 L222 430"/>
+    <path d="M368 114 L368 430"/>
+    <path d="M514 114 L514 430"/>
+  </g>
+  <g filter="url(#sh)">
+    <rect x="22" y="84" width="108" height="30" rx="10" fill="#33405a"/>
+    <rect x="168" y="84" width="108" height="30" rx="10" fill="url(#node)"/>
+    <rect x="314" y="84" width="108" height="30" rx="10" fill="url(#node)"/>
+    <rect x="460" y="84" width="108" height="30" rx="10" fill="url(#org)"/>
+  </g>
+  <g font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">
+    <text x="76" y="104">前端</text>
+    <text x="222" y="104">AiController</text>
+    <text x="368" y="104">Orchestrator</text>
+    <text x="514" y="104">LLM / Tool</text>
+  </g>
+
+  <!-- loop frame -->
+  <rect x="34" y="182" width="536" height="136" rx="10" fill="#68a5fc" fill-opacity=".06" stroke="#9cc4ff" stroke-dasharray="5 4"/>
+  <rect x="34" y="182" width="150" height="20" rx="6" fill="#dbeaff"/>
+  <text x="42" y="196" font-size="10.5" font-weight="700" fill="#1e5fc4">loop · ≤ maxIterations</text>
+
+  <!-- calls -->
+  <g stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M78 142 L218 142"/>
+    <path d="M224 166 L364 166"/>
+    <path d="M370 222 L510 222"/>
+    <path d="M370 268 L510 268"/>
+    <path d="M370 342 L510 342"/>
+  </g>
+  <g font-size="10.5" fill="#1e5fc4" text-anchor="middle">
+    <text x="149" y="136">POST …/agent/run/stream</text>
+    <text x="295" y="160" font-family="Menlo,Consolas,monospace">streamRun()</text>
+    <text x="441" y="216">plan · LLM 决策</text>
+    <text x="441" y="262">execute · 并行工具</text>
+    <text x="441" y="336">plan → 无工具调用</text>
+  </g>
+
+  <!-- sse events -->
+  <g stroke="#ff8a3d" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#arr-o)">
+    <path d="M366 245 L80 245"/>
+    <path d="M366 291 L80 291"/>
+    <path d="M366 311 L80 311"/>
+    <path d="M366 365 L80 365"/>
+    <path d="M366 388 L80 388"/>
+  </g>
+  <path d="M366 412 L80 412" stroke="#22a876" stroke-width="2.5" fill="none" marker-end="url(#arr-g)"/>
+  <g fill="#ff8a3d">
+    <circle cx="222" cy="245" r="3"/><circle cx="222" cy="291" r="3"/><circle cx="222" cy="311" r="3"/>
+    <circle cx="222" cy="365" r="3"/><circle cx="222" cy="388" r="3"/>
+  </g>
+  <circle cx="222" cy="412" r="3" fill="#22a876"/>
+  <g font-size="10.5" font-weight="600" fill="#c2410c" text-anchor="middle">
+    <text x="149" y="239">step · plan</text>
+    <text x="149" y="285">step · skill / tool</text>
+    <text x="149" y="306">step · observe</text>
+    <text x="149" y="359">delta · { content }</text>
+    <text x="149" y="382">step · final</text>
+    <text x="149" y="406" fill="#15805a">done · RunResult</text>
+  </g>
+  <text x="295" y="406" font-size="10.5" fill="#5d7c99" text-anchor="middle">Trace 落盘 · 记忆写入</text>
+
+  <g font-size="11" fill="#5d7c99">
+    <path d="M28 452 L52 452" stroke="#3b82f0" stroke-width="2"/>
+    <text x="58" y="456">调用</text>
+    <path d="M100 452 L124 452" stroke="#ff8a3d" stroke-width="2" stroke-dasharray="5 3"/>
+    <text x="130" y="456">SSE 事件</text>
+    <text x="572" y="456" text-anchor="end">前端用 fetch + ReadableStream 消费</text>
+  </g>
+</svg>

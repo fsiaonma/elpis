@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 470" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5fd3a5"/>
+      <stop offset="1" stop-color="#22a876"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#22a876"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#3b82f0" flood-opacity="0.16"/></filter>
+  </defs>
+  <rect width="600" height="470" rx="24" fill="url(#bg)"/>
+  <text x="28" y="42" font-size="18" font-weight="700" fill="#1e5fc4">RAG：从文档到带引用的回答</text>
+  <text x="28" y="64" font-size="12.5" fill="#5d7c99">切分 → 向量化 → 存储 → 检索，检索能力以内置工具 retrieve 暴露</text>
+
+  <!-- vector store -->
+  <g filter="url(#sh)">
+    <rect x="452" y="112" width="120" height="324" rx="18" fill="url(#node)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle">
+    <text x="512" y="232" font-size="16" font-weight="700">Vector</text>
+    <text x="512" y="254" font-size="16" font-weight="700">Store</text>
+  </g>
+  <rect x="464" y="274" width="96" height="26" rx="13" fill="#fff" fill-opacity=".22"/>
+  <rect x="464" y="306" width="96" height="26" rx="13" fill="#fff" fill-opacity=".22"/>
+  <g font-size="11" fill="#fff" text-anchor="middle">
+    <text x="512" y="291">file（默认）</text>
+    <text x="512" y="323">Qdrant</text>
+  </g>
+
+  <!-- ingest -->
+  <text x="28" y="104" font-size="12.5" font-weight="700" fill="#1e5fc4">① 导入<tspan dx="8" font-weight="400" font-size="11" fill="#5d7c99" font-family="Menlo,Consolas,monospace">ingestFromDirectory()</tspan></text>
+  <g filter="url(#sh)">
+    <rect x="28" y="118" width="106" height="64" rx="14" fill="#33405a"/>
+    <rect x="160" y="118" width="130" height="64" rx="14" fill="#fff"/>
+    <rect x="316" y="118" width="110" height="64" rx="14" fill="#fff"/>
+  </g>
+  <g text-anchor="middle">
+    <text x="81" y="146" font-size="14" font-weight="700" fill="#fff">文档</text>
+    <text x="81" y="166" font-size="11" fill="#cbd5e1">.md / .txt</text>
+    <text x="225" y="146" font-size="14" font-weight="700" fill="#1e5fc4">Chunker</text>
+    <text x="225" y="166" font-size="11" fill="#24456e">800 / 100 滑窗切分</text>
+    <text x="371" y="146" font-size="14" font-weight="700" fill="#1e5fc4">Embedding</text>
+    <text x="371" y="166" font-size="11" fill="#24456e">文本 → 向量</text>
+    <text x="225" y="202" font-size="11" fill="#5d7c99">可自定义 Chunker</text>
+    <text x="371" y="202" font-size="11" fill="#5d7c99">可自定义 Provider</text>
+  </g>
+  <g stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M137 150 L155 150"/>
+    <path d="M293 150 L311 150"/>
+    <path d="M429 150 L447 150"/>
+  </g>
+
+  <path d="M28 224 L432 224" stroke="#bcd7ff" stroke-width="1.5" stroke-dasharray="5 5"/>
+
+  <!-- retrieve -->
+  <text x="28" y="250" font-size="12.5" font-weight="700" fill="#1e5fc4">② 检索<tspan dx="8" font-weight="400" font-size="11.5" fill="#5d7c99">Agent 调用内置工具 retrieve</tspan></text>
+  <g filter="url(#sh)">
+    <rect x="28" y="264" width="106" height="64" rx="14" fill="url(#org)"/>
+    <rect x="160" y="264" width="130" height="64" rx="14" fill="#fff"/>
+    <rect x="236" y="362" width="190" height="64" rx="14" fill="#fff"/>
+    <rect x="28" y="362" width="182" height="64" rx="14" fill="url(#green)"/>
+  </g>
+  <g text-anchor="middle">
+    <text x="81" y="292" font-size="14" font-weight="700" fill="#fff">Agent</text>
+    <text x="81" y="312" font-size="10.5" fill="#fff" font-family="Menlo,Consolas,monospace">retrieve(query)</text>
+    <text x="225" y="292" font-size="14" font-weight="700" fill="#1e5fc4">Embedding</text>
+    <text x="225" y="312" font-size="11" fill="#24456e">query → 向量</text>
+    <text x="371" y="288" font-size="11" fill="#1e5fc4">相似度检索</text>
+    <text x="331" y="390" font-size="14" font-weight="700" fill="#1e5fc4">topK 片段</text>
+    <text x="331" y="410" font-size="10.5" fill="#24456e" font-family="Menlo,Consolas,monospace">{ docId, text, score }</text>
+    <text x="119" y="390" font-size="14" font-weight="700" fill="#fff">LLM 回答</text>
+    <text x="119" y="410" font-size="11" fill="#fff">引用 docId 与原文，不编造</text>
+  </g>
+  <g stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M137 296 L155 296"/>
+    <path d="M293 296 L447 296"/>
+    <path d="M449 394 L431 394"/>
+  </g>
+  <path d="M233 394 L215 394" stroke="#22a876" stroke-width="2" fill="none" marker-end="url(#arr-g)"/>
+</svg>

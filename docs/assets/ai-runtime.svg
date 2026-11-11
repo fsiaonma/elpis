@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5fd3a5"/>
+      <stop offset="1" stop-color="#22a876"/>
+    </linearGradient>
+    <linearGradient id="biz" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffb066"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="fw" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#68a5fc"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="infra" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5b6b86"/>
+      <stop offset="1" stop-color="#3d4a63"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#3b82f0" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="620" rx="24" fill="url(#bg)"/>
+  <text x="40" y="48" font-size="20" font-weight="700" fill="#1e5fc4">AI 运行时分层：一次 Agent 调用经过哪些模块</text>
+  <text x="40" y="72" font-size="13" fill="#5d7c99">与 Nest 服务同进程运行；模型、Embedding、Chunker、向量库都可以替换</text>
+
+  <!-- entry layer -->
+  <g filter="url(#sh)"><rect x="40" y="96" width="1120" height="84" rx="18" fill="#fff"/></g>
+  <rect x="40" y="96" width="10" height="84" rx="5" fill="url(#biz)"/>
+  <text x="72" y="134" font-size="18" font-weight="700" fill="#c2410c">接入层</text>
+  <text x="72" y="156" font-size="12" fill="#9a6a45">HTTP · SSE · 进程内</text>
+  <rect x="250" y="110" width="200" height="56" rx="12" fill="#fff4ea" stroke="#ffd4b0"/>
+  <rect x="462" y="110" width="200" height="56" rx="12" fill="#fff4ea" stroke="#ffd4b0"/>
+  <rect x="674" y="110" width="210" height="56" rx="12" fill="#fff4ea" stroke="#ffd4b0"/>
+  <rect x="896" y="110" width="240" height="56" rx="12" fill="#fff4ea" stroke="#ffd4b0"/>
+  <g font-size="11.5" font-weight="700" fill="#7c3d12" font-family="Menlo,Consolas,monospace">
+    <text x="264" y="133">POST /api/ai/agent/run</text>
+    <text x="476" y="133">POST /agent/run/stream</text>
+    <text x="688" y="133">orchestrator.run()</text>
+    <text x="910" y="133">GET agent/list · tool/list</text>
+  </g>
+  <g font-size="11.5" fill="#b0724a">
+    <text x="264" y="153">同步返回 RunResult</text>
+    <text x="476" y="153">SSE：step · delta · done</text>
+    <text x="688" y="153">Nest Service 进程内直调</text>
+    <text x="910" y="153">trace/:runId 回放每一步</text>
+  </g>
+  <path d="M693 181 L693 196" stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+
+  <!-- orchestration layer -->
+  <g filter="url(#sh)"><rect x="40" y="200" width="1120" height="154" rx="18" fill="#fff"/></g>
+  <rect x="40" y="200" width="10" height="154" rx="5" fill="url(#fw)"/>
+  <text x="72" y="262" font-size="18" font-weight="700" fill="#1e5fc4">编排层</text>
+  <text x="72" y="284" font-size="12" fill="#5d7c99">LangGraphOrchestrator</text>
+  <text x="72" y="302" font-size="12" fill="#5d7c99">一次运行的完整生命周期</text>
+
+  <rect x="250" y="230" width="120" height="80" rx="14" fill="url(#org)"/>
+  <text x="310" y="266" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">Guardrail</text>
+  <text x="310" y="287" font-size="11.5" fill="#fff" text-anchor="middle" opacity=".95">关键词 / 正则</text>
+
+  <rect x="394" y="230" width="140" height="80" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <text x="464" y="266" font-size="14" font-weight="700" fill="#1e5fc4" text-anchor="middle">构建上下文</text>
+  <text x="464" y="287" font-size="11.5" fill="#24456e" text-anchor="middle">prompt + 历史 + 输入</text>
+
+  <rect x="558" y="214" width="310" height="126" rx="14" fill="#f7faff" stroke="#9cc4ff" stroke-dasharray="6 5"/>
+  <text x="574" y="236" font-size="11.5" font-weight="700" fill="#1e5fc4">LangGraph StateGraph</text>
+  <rect x="574" y="250" width="78" height="40" rx="12" fill="url(#node)"/>
+  <rect x="676" y="250" width="78" height="40" rx="12" fill="url(#node)"/>
+  <rect x="778" y="250" width="78" height="40" rx="12" fill="url(#node)"/>
+  <g font-size="14" font-weight="700" fill="#fff" text-anchor="middle">
+    <text x="613" y="275">plan</text>
+    <text x="715" y="275">execute</text>
+    <text x="817" y="275">observe</text>
+  </g>
+  <g stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M654 270 L672 270"/>
+    <path d="M756 270 L774 270"/>
+    <path d="M817 292 V308 H613 V295"/>
+  </g>
+  <text x="713" y="330" font-size="11.5" fill="#5d7c99" text-anchor="middle">结果回填后进入下一轮 · ≤ maxIterations</text>
+
+  <rect x="892" y="230" width="100" height="80" rx="14" fill="url(#green)"/>
+  <text x="942" y="266" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">final</text>
+  <text x="942" y="287" font-size="11.5" fill="#fff" text-anchor="middle" opacity=".95">最终回答</text>
+
+  <rect x="1016" y="230" width="120" height="80" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <text x="1076" y="266" font-size="14" font-weight="700" fill="#1e5fc4" text-anchor="middle">持久化</text>
+  <text x="1076" y="287" font-size="11.5" fill="#24456e" text-anchor="middle">Trace · 线程记忆</text>
+
+  <g stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M372 270 L390 270"/>
+    <path d="M536 270 L554 270"/>
+    <path d="M870 270 L888 270"/>
+    <path d="M994 270 L1012 270"/>
+    <path d="M693 355 L693 370"/>
+  </g>
+
+  <!-- capability layer -->
+  <g filter="url(#sh)"><rect x="40" y="374" width="1120" height="116" rx="18" fill="#fff"/></g>
+  <rect x="40" y="374" width="10" height="116" rx="5" fill="url(#fw)"/>
+  <text x="72" y="426" font-size="18" font-weight="700" fill="#1e5fc4">能力层</text>
+  <text x="72" y="448" font-size="12" fill="#5d7c99">模型 · 执行 · 工具 · 委派</text>
+  <rect x="250" y="388" width="166" height="88" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <rect x="430" y="388" width="166" height="88" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <rect x="610" y="388" width="166" height="88" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <rect x="790" y="388" width="166" height="88" rx="14" fill="#eef5ff" stroke="#cfe2ff"/>
+  <rect x="970" y="388" width="166" height="88" rx="14" fill="#fff4ea" stroke="#ffd4b0"/>
+  <g font-size="14" font-weight="700" fill="#1e5fc4">
+    <text x="266" y="414">Planner · LLM</text>
+    <text x="446" y="414">Executor</text>
+    <text x="626" y="414">Skill</text>
+    <text x="806" y="414">ToolRegistry</text>
+    <text x="986" y="414" fill="#c2410c">Delegation</text>
+  </g>
+  <g font-size="11.5" fill="#24456e">
+    <text x="266" y="438">OpenAI 兼容模型</text>
+    <text x="266" y="458">自定义 LlmProvider</text>
+    <text x="446" y="438">并行执行 tool_calls</text>
+    <text x="446" y="458">失败也回填给模型</text>
+    <text x="626" y="438">app/skills/*.skill.ts</text>
+    <text x="626" y="458">业务能力函数</text>
+    <text x="806" y="438">内置 · MCP · 业务注册</text>
+    <text x="806" y="458">retrieve / invoke_agent</text>
+    <text x="986" y="438" fill="#7c3d12">invoke_agent 委派</text>
+    <text x="986" y="458" fill="#7c3d12">深度 · 环路 · Guardrail</text>
+  </g>
+  <path d="M693 491 L693 506" stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+
+  <!-- storage and external -->
+  <g filter="url(#sh)"><rect x="40" y="510" width="1120" height="84" rx="18" fill="#fff"/></g>
+  <rect x="40" y="510" width="10" height="84" rx="5" fill="url(#infra)"/>
+  <text x="72" y="548" font-size="18" font-weight="700" fill="#33405a">存储与外部</text>
+  <text x="72" y="570" font-size="12" fill="#6b7890">按需接入，可替换</text>
+  <g>
+    <rect x="250" y="524" width="136" height="56" rx="12" fill="#eef5ff"/>
+    <rect x="400" y="524" width="136" height="56" rx="12" fill="#eef5ff"/>
+    <rect x="550" y="524" width="136" height="56" rx="12" fill="#eef5ff"/>
+    <rect x="700" y="524" width="136" height="56" rx="12" fill="#f2f4f8"/>
+    <rect x="850" y="524" width="136" height="56" rx="12" fill="#f2f4f8"/>
+    <rect x="1000" y="524" width="136" height="56" rx="12" fill="#f2f4f8"/>
+  </g>
+  <g font-size="13.5" font-weight="700" text-anchor="middle" fill="#1e5fc4">
+    <text x="318" y="548">Memory</text>
+    <text x="468" y="548">Trace</text>
+    <text x="618" y="548">Vector</text>
+    <text x="768" y="548" fill="#33405a">LLM API</text>
+    <text x="918" y="548" fill="#33405a">Embedding API</text>
+    <text x="1068" y="548" fill="#33405a">MCP Server</text>
+  </g>
+  <g font-size="11.5" text-anchor="middle" fill="#5d7c99">
+    <text x="318" y="567">.elpis/memory</text>
+    <text x="468" y="567">.elpis/trace</text>
+    <text x="618" y="567">file · Qdrant</text>
+    <text x="768" y="567">OpenAI 兼容</text>
+    <text x="918" y="567">向量模型</text>
+    <text x="1068" y="567">stdio · HTTP</text>
+  </g>
+</svg>

@@ -572,15 +572,172 @@
     .feature p { margin: 0; color: var(--text-2); font-size: 14px; line-height: 1.7; }
     .feature .more { display: inline-block; margin-top: 14px; color: var(--primary-700); font-size: 13px; font-weight: 600; }
 
-    .figure {
+    .section--tight { padding-top: 24px; }
+
+    /* ---------- diagrams ---------- */
+    .fig-map {
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 14px;
+      padding: 8px 24px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .fig-map-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; }
+    .fig-map-row + .fig-map-row { border-top: 1px solid var(--border); }
+    .fig-map-label {
+      flex-shrink: 0;
+      width: 72px;
+      padding-top: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .fig-map-items { display: flex; flex-wrap: wrap; gap: 8px; }
+    .fig-map-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px 5px 5px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--text-2);
+      font: inherit;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .fig-map-item:hover { border-color: var(--primary); background: var(--primary-50); color: var(--primary-800); }
+    .fig-map-item b {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--primary-100);
+      color: var(--primary-800);
+      font-size: 11.5px;
+    }
+    .fig-map-item.ai b { background: var(--orange-soft); color: #c2410c; }
+
+    .diagram {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
       border-radius: 24px;
       background: #fff;
       border: 1px solid var(--border);
       box-shadow: 0 24px 60px rgba(77, 143, 245, 0.14);
+      scroll-margin-top: 24px;
     }
-    .figure img { display: block; width: 100%; border-radius: 16px; }
+    .diagram + .diagram,
+    .diagram + .diagram-grid { margin-top: 28px; }
+    .diagram-cap { display: flex; align-items: center; gap: 16px; padding: 18px 22px 14px; }
+    .diagram-no {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #8ec0ff, var(--primary-700));
+      box-shadow: 0 8px 16px rgba(77, 143, 245, 0.3);
+    }
+    .diagram.ai .diagram-no { background: linear-gradient(135deg, #ffc07d, #ff8a3d); box-shadow: 0 8px 16px rgba(255, 140, 60, 0.3); }
+    .diagram-meta { flex: 1 1 0; min-width: 0; }
+    .diagram-meta h3 { margin: 0; font-size: 17px; }
+    .diagram-meta p { margin: 3px 0 0; color: var(--text-2); font-size: 13.5px; line-height: 1.6; }
+    .diagram-doc {
+      flex-shrink: 0;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .diagram-doc:hover { background: var(--primary-100); }
+    .diagram-view {
+      display: block;
+      width: 100%;
+      margin-top: auto;
+      padding: 0 14px 14px;
+      border: 0;
+      border-radius: 0 0 24px 24px;
+      background: none;
+      cursor: zoom-in;
+    }
+    .diagram-view img { display: block; width: 100%; height: auto; border-radius: 16px; }
+    .diagram-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+    .diagram-grid .diagram + .diagram { margin-top: 0; }
+    .fig-map-item:focus-visible,
+    .diagram-view:focus-visible,
+    .diagram-doc:focus-visible { outline: 2px solid var(--primary-700); outline-offset: 2px; }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      background: rgba(16, 32, 60, 0.82);
+      backdrop-filter: blur(6px);
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-bar { display: flex; align-items: center; gap: 14px; padding: 14px 20px; color: #fff; }
+    .lightbox-count {
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .lightbox-bar strong { font-size: 16px; }
+    .lightbox-doc { margin-left: auto; color: #cfe0ff; font-size: 13px; font-weight: 600; text-decoration: none; }
+    .lightbox-close,
+    .lightbox-nav {
+      flex-shrink: 0;
+      border: 0;
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .lightbox-close:hover,
+    .lightbox-nav:hover { background: rgba(255, 255, 255, 0.3); }
+    .lightbox-close { width: 36px; height: 36px; border-radius: 10px; font-size: 22px; }
+    .lightbox-nav { width: 44px; height: 44px; border-radius: 50%; font-size: 26px; }
+    .lightbox-stage {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 0 20px 28px;
+    }
+    .lightbox-frame {
+      flex: 0 1 auto;
+      min-width: 0;
+      width: min(100%, calc((100vh - 130px) * var(--ar, 2)));
+    }
+    .lightbox-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    }
 
     .split {
       display: grid;
@@ -695,6 +852,7 @@
     @media (max-width: 1360px) {
       .toc { display: none; }
       .features { grid-template-columns: repeat(2, 1fr); }
+      .diagram-grid { grid-template-columns: minmax(0, 1fr); max-width: 760px; margin-left: auto; margin-right: auto; }
     }
     @media (max-width: 1100px) {
       .split { grid-template-columns: 1fr; }
@@ -727,6 +885,15 @@
       .stats { margin: -70px 18px 0; }
       .features { grid-template-columns: 1fr; }
       .cta { margin: 0 18px 48px; padding: 36px 22px; }
+      .fig-map { padding: 4px 16px; }
+      .fig-map-row { flex-direction: column; gap: 8px; }
+      .fig-map-label { width: auto; padding-top: 0; }
+      .diagram { scroll-margin-top: 68px; }
+      .diagram-cap { flex-wrap: wrap; gap: 12px; padding: 14px 16px 10px; }
+      .diagram-doc { margin-left: 52px; }
+      .diagram-view { padding: 0 8px 8px; }
+      .lightbox-stage { gap: 6px; padding: 0 8px 20px; }
+      .lightbox-nav { width: 34px; height: 34px; font-size: 20px; }
       .doc-pager { flex-direction: column; }
       .doc-pager a { max-width: none; }
     }
@@ -741,6 +908,19 @@
   <div class="layout">
     <aside class="sidebar" id="sidebar"></aside>
     <main class="main" id="main"></main>
+  </div>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="图解放大查看">
+    <div class="lightbox-bar">
+      <span class="lightbox-count" id="lb-count"></span>
+      <strong id="lb-title"></strong>
+      <a class="lightbox-doc" id="lb-doc" href="#">查看文档 →</a>
+      <button type="button" class="lightbox-close" id="lb-close" aria-label="关闭">×</button>
+    </div>
+    <div class="lightbox-stage">
+      <button type="button" class="lightbox-nav" id="lb-prev" aria-label="上一张">‹</button>
+      <div class="lightbox-frame" id="lb-frame"><img id="lb-img" alt="" /></div>
+      <button type="button" class="lightbox-nav" id="lb-next" aria-label="下一张">›</button>
+    </div>
   </div>
   <script>
     const HOME = 'index.md';
@@ -847,6 +1027,65 @@
       chart: '<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     };
 
+    // 首页图解：顺序即编号，分组对应首页章节
+    const DIAGRAM_GROUPS = ['全局', '服务端', '前端', 'AI Agent'];
+    const DIAGRAMS = [
+      { id: 'architecture', group: '全局', title: '整体架构', src: 'assets/architecture.svg', size: [1200, 660], doc: 'guide/structure.md',
+        desc: '业务仓库只写模块、页面、配置与 Agent；框架提供运行时与通用组件；基础设施按需接入。' },
+      { id: 'boot', group: '全局', title: '启动与构建', src: 'assets/boot-flow.svg', size: [1200, 540], doc: 'guide/dev-deploy.md',
+        desc: 'serverStart() 合并配置、扫描并装配模块；frontendBuild() 收集页面入口、生成模板，两条线在页面访问时汇合。' },
+      { id: 'pipeline', group: '服务端', title: '请求链路', src: 'assets/request-pipeline.svg', size: [1200, 380], doc: 'server/pipeline.md',
+        desc: '签名、鉴权、项目隔离、参数校验依次通过后才进入 Controller，每一环失败都有固定错误码。' },
+      { id: 'schema', group: '前端', title: 'Schema 到页面', src: 'assets/schema-flow.svg', size: [1200, 520], doc: 'frontend/schema-view.md',
+        desc: '字段用 JSON Schema 描述，再声明它出现在表格、搜索栏还是表单里，页面与接口约定随之确定。' },
+      { id: 'inherit', group: '前端', title: 'model 与 project 继承', src: 'assets/model-inherit.svg', size: [1200, 380], doc: 'frontend/model.md',
+        desc: 'model 定义模板，project 按 key 覆盖、新增或保留，一份配置派生出多个项目。' },
+      { id: 'render', group: '前端', title: '页面渲染流程', src: 'assets/page-render.svg', size: [1200, 500], doc: 'frontend/menu.md',
+        desc: '服务端只渲染一个模板；菜单、路由和视图类型全部来自合并后的项目配置。' },
+      { id: 'loop', group: 'AI Agent', title: 'Agent 运行循环', src: 'assets/agent-loop.svg', size: [1200, 560], doc: 'ai/overview.md',
+        desc: 'plan → execute → observe 循环，Guardrail 在前，Memory 与 Trace 贯穿全程。' },
+      { id: 'runtime', group: 'AI Agent', title: 'AI 运行时分层', src: 'assets/ai-runtime.svg', size: [1200, 620], doc: 'ai/overview.md',
+        desc: '接入、编排、能力、存储四层；模型、Embedding、Chunker、向量库都可以替换。' },
+      { id: 'tools', group: 'AI Agent', title: '工具体系与 MCP', src: 'assets/tool-registry.svg', size: [600, 470], doc: 'ai/tool.md',
+        desc: 'Skill、内置工具、业务注册的工具和任意语言的 MCP Server，对 Agent 来说都只是一个名字。' },
+      { id: 'rag', group: 'AI Agent', title: 'RAG 知识库', src: 'assets/rag-flow.svg', size: [600, 470], doc: 'ai/rag.md',
+        desc: '文档切分、向量化、入库；Agent 通过 retrieve 取回 topK 片段，按 docId 引用作答。' },
+      { id: 'multi', group: 'AI Agent', title: '多 Agent 协作', src: 'assets/multi-agent.svg', size: [600, 470], doc: 'ai/multi-agent.md',
+        desc: 'Supervisor 用 invoke_agent 委派 Worker，深度、环路与 Guardrail 在委派前检查。' },
+      { id: 'stream', group: 'AI Agent', title: 'SSE 流式时序', src: 'assets/stream-sequence.svg', size: [600, 470], doc: 'ai/api.md',
+        desc: 'plan、工具调用、观察逐步推送为 step 事件，最后是 delta 与 done。' },
+    ];
+
+    const diagramNo = (index) => String(index + 1).padStart(2, '0');
+    const isAiDiagram = (diagram) => diagram.group === 'AI Agent';
+
+    function renderDiagram(id) {
+      const index = DIAGRAMS.findIndex((d) => d.id === id);
+      const d = DIAGRAMS[index];
+      return `
+        <figure class="diagram reveal${isAiDiagram(d) ? ' ai' : ''}" id="fig-${d.id}">
+          <figcaption class="diagram-cap">
+            <span class="diagram-no">${diagramNo(index)}</span>
+            <div class="diagram-meta"><h3>${d.title}</h3><p>${d.desc}</p></div>
+            <a class="diagram-doc" href="#${d.doc}">查看文档 →</a>
+          </figcaption>
+          <button type="button" class="diagram-view" data-zoom="${d.id}" aria-label="放大查看：${d.title}">
+            <img src="${d.src}" alt="${d.title}" width="${d.size[0]}" height="${d.size[1]}" loading="lazy" />
+          </button>
+        </figure>`;
+    }
+
+    function renderFigMap() {
+      return DIAGRAM_GROUPS.map((group) => {
+        const items = DIAGRAMS.map((d, index) => ({ d, index }))
+          .filter(({ d }) => d.group === group)
+          .map(({ d, index }) =>
+            `<button type="button" class="fig-map-item${isAiDiagram(d) ? ' ai' : ''}" data-fig="fig-${d.id}"><b>${diagramNo(index)}</b>${d.title}</button>`
+          ).join('');
+        return `<div class="fig-map-row"><span class="fig-map-label">${group}</span><div class="fig-map-items">${items}</div></div>`;
+      }).join('');
+    }
+
     function renderHome() {
       const features = [
         { icon: 'server', title: '约定式 Nest 服务端', desc: '*.module.ts 自动加载，内置签名、参数校验、统一异常与多项目隔离。', link: 'server/controller.md' },
@@ -901,13 +1140,32 @@
             <div class="features">${featureHtml}</div>
           </section>
 
-          <section class="section" style="padding-top:24px">
+          <section class="section section--tight">
+            <div class="section-head reveal">
+              <span class="eyebrow">DIAGRAMS</span>
+              <h2><em>${DIAGRAMS.length} 张图</em>看懂 Elpis</h2>
+              <p>架构、链路和流程都画成了图。点下面任意一项直接跳过去，点图片可以放大。</p>
+            </div>
+            <div class="fig-map reveal">${renderFigMap()}</div>
+          </section>
+
+          <section class="section section--tight">
             <div class="section-head reveal">
               <span class="eyebrow">ARCHITECTURE</span>
               <h2>清晰的<em>三层架构</em></h2>
               <p>业务仓库按约定组织代码，框架提供运行时、通用组件与 AI 能力，基础设施按需接入。</p>
             </div>
-            <div class="figure reveal"><img src="assets/architecture.svg" alt="Elpis 架构" /></div>
+            ${renderDiagram('architecture')}
+            ${renderDiagram('boot')}
+          </section>
+
+          <section class="section section--tight">
+            <div class="section-head reveal">
+              <span class="eyebrow">SERVER</span>
+              <h2>一次请求的<em>完整旅程</em></h2>
+              <p>签名、项目隔离、参数校验与统一异常由框架的全局中间层完成，Controller 里只剩业务逻辑。</p>
+            </div>
+            ${renderDiagram('pipeline')}
           </section>
 
           <section class="section">
@@ -932,6 +1190,17 @@
             </div>
           </section>
 
+          <section class="section section--tight">
+            <div class="section-head reveal">
+              <span class="eyebrow">FROM CONFIG TO PAGE</span>
+              <h2>配置如何<em>变成页面</em></h2>
+              <p>从一份 schemaConfig，到多项目继承，再到浏览器里的一次页面访问。</p>
+            </div>
+            ${renderDiagram('schema')}
+            ${renderDiagram('inherit')}
+            ${renderDiagram('render')}
+          </section>
+
           <section class="section">
             <div class="split reverse">
               <div class="split-media reveal"><img src="assets/ai-agent.jpg" alt="AI Agent" /></div>
@@ -954,13 +1223,20 @@
             </div>
           </section>
 
-          <section class="section" style="padding-top:24px">
+          <section class="section section--tight">
             <div class="section-head reveal">
               <span class="eyebrow">AGENT LOOP</span>
               <h2>看得见的<em>Agent 运行循环</em></h2>
               <p>每一次 plan、工具调用、观察与委派都会成为一个 Step，写入 Trace 并通过 SSE 实时推送到前端。</p>
             </div>
-            <div class="figure reveal"><img src="assets/agent-loop.svg" alt="Agent 运行循环" /></div>
+            ${renderDiagram('loop')}
+            ${renderDiagram('runtime')}
+            <div class="diagram-grid">
+              ${renderDiagram('tools')}
+              ${renderDiagram('rag')}
+              ${renderDiagram('multi')}
+              ${renderDiagram('stream')}
+            </div>
           </section>
 
           <section class="section">
@@ -1152,6 +1428,7 @@ npm run dev</pre>
     }
 
     function loadDoc(path, anchor) {
+      closeLightbox();
       currentDocPath = path;
       document.querySelectorAll('.nav-link').forEach((link) => {
         link.classList.toggle('active', link.dataset.path === path);
@@ -1212,10 +1489,83 @@ npm run dev</pre>
       }
     }
 
+    const lightboxEl = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lb-img');
+    const lbFrame = document.getElementById('lb-frame');
+    const lbTitle = document.getElementById('lb-title');
+    const lbCount = document.getElementById('lb-count');
+    const lbDoc = document.getElementById('lb-doc');
+    let lightboxIndex = -1;
+    let lightboxTrigger = null;
+
+    function showLightbox(index) {
+      const total = DIAGRAMS.length;
+      lightboxIndex = (index + total) % total;
+      const d = DIAGRAMS[lightboxIndex];
+      lbImg.src = d.src;
+      lbImg.alt = d.title;
+      lbFrame.style.setProperty('--ar', String(d.size[0] / d.size[1]));
+      lbTitle.textContent = d.title;
+      lbCount.textContent = `${diagramNo(lightboxIndex)} / ${total}`;
+      lbDoc.href = `#${d.doc}`;
+    }
+
+    function openLightbox(id, trigger) {
+      const index = DIAGRAMS.findIndex((d) => d.id === id);
+      if (index < 0) return;
+      lightboxTrigger = trigger ?? null;
+      showLightbox(index);
+      lightboxEl.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('lb-close').focus();
+    }
+
+    function closeLightbox() {
+      if (!lightboxEl.classList.contains('open')) return;
+      lightboxEl.classList.remove('open');
+      document.body.style.overflow = '';
+      lightboxTrigger?.focus();
+      lightboxTrigger = null;
+    }
+
+    lightboxEl.addEventListener('click', (event) => {
+      if (event.target.closest('#lb-prev')) {
+        showLightbox(lightboxIndex - 1);
+        return;
+      }
+      if (event.target.closest('#lb-next')) {
+        showLightbox(lightboxIndex + 1);
+        return;
+      }
+      // 点图片本身或标题栏空白处不关闭；关闭按钮、文档链接、背景都会关闭
+      if (event.target.closest('#lb-frame')) return;
+      if (event.target.closest('.lightbox-bar') && !event.target.closest('#lb-close, #lb-doc')) return;
+      closeLightbox();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!lightboxEl.classList.contains('open')) return;
+      if (event.key === 'Escape') closeLightbox();
+      else if (event.key === 'ArrowLeft') showLightbox(lightboxIndex - 1);
+      else if (event.key === 'ArrowRight') showLightbox(lightboxIndex + 1);
+    });
+
     mainEl.addEventListener('click', (event) => {
       const copyBtn = event.target.closest('[data-copy]');
       if (copyBtn) {
         copyText(copyBtn);
+        return;
+      }
+
+      const zoomBtn = event.target.closest('[data-zoom]');
+      if (zoomBtn) {
+        openLightbox(zoomBtn.dataset.zoom, zoomBtn);
+        return;
+      }
+
+      const figLink = event.target.closest('[data-fig]');
+      if (figLink) {
+        document.getElementById(figLink.dataset.fig)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
 

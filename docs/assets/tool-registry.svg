@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 470" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <marker id="arr-o" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ff8a3d"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#3b82f0" flood-opacity="0.16"/></filter>
+  </defs>
+  <rect width="600" height="470" rx="24" fill="url(#bg)"/>
+  <text x="28" y="42" font-size="18" font-weight="700" fill="#1e5fc4">工具体系：任意语言的能力都是 Tool</text>
+  <text x="28" y="64" font-size="12.5" fill="#5d7c99">Agent 按名字声明，模型只看到被声明的 Skill / Tool</text>
+
+  <!-- sources -->
+  <g filter="url(#sh)">
+    <rect x="28" y="88" width="170" height="50" rx="12" fill="#fff"/>
+    <rect x="28" y="148" width="170" height="50" rx="12" fill="#fff"/>
+    <rect x="28" y="208" width="170" height="50" rx="12" fill="#fff"/>
+  </g>
+  <g font-size="13.5" font-weight="700" fill="#1e5fc4">
+    <text x="42" y="109">Skill</text>
+    <text x="42" y="169">内置 Tool</text>
+    <text x="42" y="229">业务 Tool</text>
+  </g>
+  <g font-size="11" fill="#5d7c99">
+    <text x="42" y="127">app/skills/*.skill.ts</text>
+    <text x="42" y="187">retrieve · invoke_agent</text>
+    <text x="42" y="247">Service 中 register()</text>
+  </g>
+
+  <rect x="28" y="268" width="170" height="172" rx="14" fill="#fff4ea" stroke="#ffd4b0"/>
+  <text x="42" y="291" font-size="13.5" font-weight="700" fill="#c2410c">MCP Server</text>
+  <g>
+    <rect x="42" y="302" width="68" height="26" rx="8" fill="#fff" stroke="#ffd4b0"/>
+    <rect x="116" y="302" width="68" height="26" rx="8" fill="#fff" stroke="#ffd4b0"/>
+    <rect x="42" y="334" width="68" height="26" rx="8" fill="#fff" stroke="#ffd4b0"/>
+    <rect x="116" y="334" width="68" height="26" rx="8" fill="#fff" stroke="#ffd4b0"/>
+    <rect x="42" y="366" width="142" height="26" rx="8" fill="#fff" stroke="#ffd4b0"/>
+  </g>
+  <g font-size="12" font-weight="600" fill="#7c3d12" text-anchor="middle">
+    <text x="76" y="320">Node</text>
+    <text x="150" y="320">Python</text>
+    <text x="76" y="352">Java</text>
+    <text x="150" y="352">Go</text>
+    <text x="113" y="384">远程 HTTP 服务</text>
+  </g>
+  <text x="113" y="411" font-size="11" fill="#b0724a" text-anchor="middle">stdio 或 HTTP 接入</text>
+  <text x="113" y="428" font-size="11" fill="#b0724a" text-anchor="middle">启动时拉取工具列表</text>
+
+  <!-- registry -->
+  <g filter="url(#sh)">
+    <rect x="228" y="88" width="130" height="50" rx="12" fill="url(#node)"/>
+    <rect x="228" y="148" width="130" height="292" rx="16" fill="url(#node)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle">
+    <text x="293" y="109" font-size="13" font-weight="700">SkillScanner</text>
+    <text x="293" y="127" font-size="10.5" opacity=".92">dist/skills</text>
+    <text x="293" y="262" font-size="17" font-weight="700">Tool</text>
+    <text x="293" y="284" font-size="17" font-weight="700">Registry</text>
+    <text x="293" y="314" font-size="11" opacity=".95">按名字注册</text>
+    <text x="293" y="332" font-size="11" opacity=".95">同名覆盖 = 包装</text>
+  </g>
+  <rect x="238" y="394" width="110" height="28" rx="14" fill="#fff" fill-opacity=".22"/>
+  <text x="293" y="412" font-size="10.5" fill="#fff" text-anchor="middle" font-family="Menlo,Consolas,monospace">GET /tool/list</text>
+
+  <g stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M201 113 L223 113"/>
+    <path d="M201 173 L223 173"/>
+    <path d="M201 233 L223 233"/>
+    <path d="M361 113 L383 113"/>
+    <path d="M361 200 L383 200"/>
+  </g>
+  <path d="M201 354 L223 354" stroke="#ff8a3d" stroke-width="2" fill="none" marker-end="url(#arr-o)"/>
+
+  <!-- agent -->
+  <g filter="url(#sh)">
+    <rect x="388" y="88" width="184" height="170" rx="14" fill="#14284a"/>
+  </g>
+  <circle cx="404" cy="104" r="4.5" fill="#ff6b6b"/><circle cx="418" cy="104" r="4.5" fill="#ffd166"/><circle cx="432" cy="104" r="4.5" fill="#06d6a0"/>
+  <text x="446" y="108" font-size="10.5" fill="#8fb4e8">assistant.agent.ts</text>
+  <g font-family="Menlo,Consolas,monospace" font-size="11" fill="#d8e8ff">
+    <text x="402" y="134">const agent = {</text>
+    <text x="402" y="152" xml:space="preserve">  <tspan fill="#7fd1ff">name</tspan>: <tspan fill="#a5e075">'assistant'</tspan>,</text>
+    <text x="402" y="170" xml:space="preserve">  <tspan fill="#ffd166">skills</tspan>: [<tspan fill="#a5e075">'weather'</tspan>],</text>
+    <text x="402" y="188" xml:space="preserve">  <tspan fill="#ffd166">tools</tspan>: [<tspan fill="#a5e075">'retrieve'</tspan>,</text>
+    <text x="402" y="206" xml:space="preserve">    <tspan fill="#a5e075">'greet'</tspan>],</text>
+    <text x="402" y="224" xml:space="preserve">  <tspan fill="#7fd1ff">prompt</tspan>: <tspan fill="#a5e075">'...'</tspan>,</text>
+    <text x="402" y="242">};</text>
+  </g>
+
+  <path d="M480 261 L480 279" stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+  <g filter="url(#sh)">
+    <rect x="388" y="284" width="184" height="56" rx="14" fill="url(#org)"/>
+    <rect x="388" y="366" width="184" height="56" rx="14" fill="url(#node)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle">
+    <text x="480" y="308" font-size="14" font-weight="700">plan · LLM</text>
+    <text x="480" y="327" font-size="11" opacity=".95">function tools = 已声明项</text>
+    <text x="480" y="390" font-size="14" font-weight="700">execute</text>
+    <text x="480" y="409" font-size="11" opacity=".95">按 tool_calls 并行执行</text>
+  </g>
+  <path d="M480 343 L480 361" stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+  <path d="M385 394 L363 394" stroke="#3b82f0" stroke-width="2" stroke-dasharray="4 3" fill="none" marker-end="url(#arr)"/>
+  <text x="480" y="444" font-size="11" fill="#5d7c99" text-anchor="middle">失败也回填，由模型决定下一步</text>
+</svg>

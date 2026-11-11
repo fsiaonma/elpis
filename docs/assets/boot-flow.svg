@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f9ff"/>
+      <stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86bbff"/>
+      <stop offset="1" stop-color="#3b82f0"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffbd7a"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5fd3a5"/>
+      <stop offset="1" stop-color="#22a876"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3b82f0"/>
+    </marker>
+    <marker id="arr-o" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ff8a3d"/>
+    </marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#22a876"/>
+    </marker>
+    <filter id="sh"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#3b82f0" flood-opacity="0.14"/></filter>
+  </defs>
+  <rect width="1200" height="540" rx="24" fill="url(#bg)"/>
+  <text x="40" y="48" font-size="20" font-weight="700" fill="#1e5fc4">两条命令之后：服务端启动与前端构建</text>
+  <text x="40" y="72" font-size="13" fill="#5d7c99">serverStart() 负责配置、扫描与装配，frontendBuild() 负责页面入口与模板，两条线在 /view/&lt;page&gt; 汇合</text>
+
+  <!-- server lane -->
+  <g filter="url(#sh)">
+    <rect x="40" y="100" width="130" height="150" rx="16" fill="#33405a"/>
+    <rect x="196" y="100" width="172" height="150" rx="14" fill="#fff"/>
+    <rect x="392" y="100" width="172" height="150" rx="14" fill="#fff"/>
+    <rect x="588" y="100" width="172" height="150" rx="14" fill="#fff"/>
+    <rect x="784" y="100" width="172" height="150" rx="14" fill="#fff"/>
+    <rect x="980" y="100" width="172" height="150" rx="14" fill="#fff"/>
+  </g>
+  <g text-anchor="middle" fill="#fff">
+    <text x="105" y="158" font-size="17" font-weight="700">服务端</text>
+    <text x="105" y="184" font-size="11.5" fill="#cbd5e1" font-family="Menlo,Consolas,monospace">node server.js</text>
+    <text x="105" y="204" font-size="11.5" fill="#cbd5e1" font-family="Menlo,Consolas,monospace">serverStart()</text>
+  </g>
+  <g text-anchor="middle" font-size="13" font-weight="700" fill="#fff">
+    <circle cx="222" cy="130" r="13" fill="url(#node)"/><text x="222" y="135">1</text>
+    <circle cx="418" cy="130" r="13" fill="url(#node)"/><text x="418" y="135">2</text>
+    <circle cx="614" cy="130" r="13" fill="url(#org)"/><text x="614" y="135">3</text>
+    <circle cx="810" cy="130" r="13" fill="url(#node)"/><text x="810" y="135">4</text>
+    <circle cx="1006" cy="130" r="13" fill="url(#green)"/><text x="1006" y="135">5</text>
+  </g>
+  <g font-size="15" font-weight="700" fill="#1e5fc4">
+    <text x="244" y="135">合并配置</text>
+    <text x="440" y="135">装配模块</text>
+    <text x="636" y="135" fill="#c2410c">AI 初始化</text>
+    <text x="832" y="135">全局中间层</text>
+    <text x="1028" y="135" fill="#15805a">对外服务</text>
+  </g>
+  <g font-size="11.5" fill="#24456e">
+    <text x="212" y="168">框架 config.default.js</text>
+    <text x="212" y="188">业务 config.default.js</text>
+    <text x="212" y="208">业务 config.&lt;env&gt;.js</text>
+    <text x="212" y="228" fill="#5d7c99">按 _ENV 逐层深合并</text>
+
+    <text x="408" y="168">Extend · Project · View</text>
+    <text x="408" y="188">AiModule · Agent 运行时</text>
+    <text x="408" y="208">扫描 dist/modules/**</text>
+    <text x="408" y="228" fill="#5d7c99">*.module.js → Nest 模块</text>
+
+    <text x="604" y="168">dist/agents → Agent</text>
+    <text x="604" y="188">dist/skills → Skill</text>
+    <text x="604" y="208">MCP Server → Tool</text>
+    <text x="604" y="228">register() → Tool</text>
+
+    <text x="800" y="168">ValidationPipe</text>
+    <text x="800" y="188">AllExceptionsFilter</text>
+    <text x="800" y="208">ApiSignGuard</text>
+    <text x="800" y="228">ProjKeyInterceptor</text>
+
+    <text x="996" y="168">listen PORT || 8080</text>
+    <text x="996" y="188">/api/** 业务接口</text>
+    <text x="996" y="208">/view/&lt;page&gt; 页面</text>
+    <text x="996" y="228">/static/** 静态资源</text>
+  </g>
+  <g stroke="#3b82f0" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M173 175 L191 175"/>
+    <path d="M371 175 L387 175"/>
+    <path d="M567 175 L583 175"/>
+    <path d="M763 175 L779 175"/>
+    <path d="M959 175 L975 175"/>
+  </g>
+
+  <!-- join -->
+  <path d="M1066 254 L1066 294" stroke="#22a876" stroke-width="2.5" fill="none" marker-end="url(#arr-g)"/>
+  <text x="1080" y="279" font-size="12" font-weight="600" fill="#15805a">汇合</text>
+
+  <!-- frontend lane -->
+  <g filter="url(#sh)">
+    <rect x="40" y="300" width="130" height="150" rx="16" fill="url(#org)"/>
+    <rect x="196" y="300" width="172" height="150" rx="14" fill="#fff"/>
+    <rect x="392" y="300" width="368" height="150" rx="14" fill="#fff"/>
+    <rect x="784" y="300" width="172" height="150" rx="14" fill="#fff"/>
+    <rect x="980" y="300" width="172" height="150" rx="14" fill="#fff"/>
+  </g>
+  <g text-anchor="middle" fill="#fff">
+    <text x="105" y="358" font-size="17" font-weight="700">前端</text>
+    <text x="105" y="384" font-size="11.5" font-family="Menlo,Consolas,monospace">node build.js</text>
+    <text x="105" y="404" font-size="11.5" font-family="Menlo,Consolas,monospace">frontendBuild()</text>
+  </g>
+  <g text-anchor="middle" font-size="13" font-weight="700" fill="#fff">
+    <circle cx="222" cy="330" r="13" fill="url(#org)"/><text x="222" y="335">1</text>
+    <circle cx="418" cy="330" r="13" fill="url(#org)"/><text x="418" y="335">2</text>
+    <circle cx="810" cy="330" r="13" fill="url(#org)"/><text x="810" y="335">3</text>
+    <circle cx="1006" cy="330" r="13" fill="url(#green)"/><text x="1006" y="335">4</text>
+  </g>
+  <g font-size="15" font-weight="700" fill="#c2410c">
+    <text x="244" y="335">扫描入口</text>
+    <text x="440" y="335">Vite 构建</text>
+    <text x="832" y="335">生成模板</text>
+    <text x="1028" y="335" fill="#15805a">页面访问</text>
+  </g>
+  <g font-size="11.5" fill="#24456e">
+    <text x="212" y="368">pages/**/entry.*.js</text>
+    <text x="212" y="388">框架 + 业务一起构建</text>
+    <text x="212" y="408">同名时业务覆盖框架</text>
+    <text x="212" y="428" fill="#5d7c99">一个入口 = 一个页面</text>
+
+    <text x="800" y="368">app/public/dist/</text>
+    <text x="800" y="388">entry.&lt;page&gt;.tpl</text>
+    <text x="800" y="408" fill="#5d7c99">local：指向 dev server</text>
+    <text x="800" y="428" fill="#5d7c99">prod：指向 /dist/prod/</text>
+
+    <text x="996" y="368">GET /view/&lt;page&gt;</text>
+    <text x="996" y="388">ViewController</text>
+    <text x="996" y="408">nunjucks 渲染模板</text>
+    <text x="996" y="428">注入 projKey / options</text>
+  </g>
+  <rect x="408" y="348" width="336" height="42" rx="10" fill="#eef5ff"/>
+  <rect x="418" y="357" width="96" height="24" rx="12" fill="#fff" stroke="#cfe2ff"/>
+  <text x="466" y="373" font-size="11" text-anchor="middle" fill="#1e5fc4" font-family="Menlo,Consolas,monospace">_ENV=local</text>
+  <text x="526" y="373" font-size="11.5" fill="#24456e">dev server 127.0.0.1:9002 · HMR</text>
+  <rect x="408" y="396" width="336" height="42" rx="10" fill="#fff4ea"/>
+  <rect x="418" y="405" width="124" height="24" rx="12" fill="#fff" stroke="#ffd4b0"/>
+  <text x="480" y="421" font-size="11" text-anchor="middle" fill="#c2410c" font-family="Menlo,Consolas,monospace">_ENV=production</text>
+  <text x="554" y="421" font-size="11.5" fill="#24456e">构建到 app/public/dist/prod</text>
+  <g stroke="#ff8a3d" stroke-width="2" fill="none" marker-end="url(#arr-o)">
+    <path d="M173 375 L191 375"/>
+    <path d="M371 375 L387 375"/>
+    <path d="M763 375 L779 375"/>
+    <path d="M959 375 L975 375"/>
+  </g>
+
+  <rect x="40" y="474" width="1120" height="42" rx="12" fill="#fff"/>
+  <text x="60" y="500" font-size="12.5" fill="#24456e"><tspan font-weight="700" fill="#1e5fc4">开发</tspan><tspan dx="12">npm run build:dev（Vite HMR）+ npm run dev（tsc -w + nodemon）</tspan></text>
+  <text x="640" y="500" font-size="12.5" fill="#24456e"><tspan font-weight="700" fill="#15805a">生产</tspan><tspan dx="12">npm run build:prod → npm run prod（_ENV=production）</tspan></text>
+</svg>
